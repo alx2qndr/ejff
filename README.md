@@ -1,5 +1,5 @@
 # Engine Just For Fun (EJFF for short)
-EJFF is an engine created for educational purposes, aimed at mastering the fundamental principles of 2D and 3D engine development
+EJFF is an engine made for fun and experimenting with graphics and game development.
 
 # Minimum requirements
 - **C++17 compiler**  
