@@ -68,6 +68,8 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
     binary_path /= filename;
     binary_path += "." + format_ext;
 
+    binary_path = std::filesystem::absolute(binary_path).lexically_normal();
+
     std::ifstream file(binary_path, std::ios::binary | std::ios::ate);
     if (!file)
     {
