@@ -11,6 +11,5 @@ set(EJFF_SOURCES
     "${EJFF_SRC_ROOT_DIR}/gpu/device.cpp"
     "${EJFF_SRC_ROOT_DIR}/application.cpp"
     "${EJFF_SRC_ROOT_DIR}/main.cpp"
-    "${EJFF_SRC_ROOT_DIR}/unique_handle.cpp"
     "${EJFF_SRC_ROOT_DIR}/window.cpp"
 )
