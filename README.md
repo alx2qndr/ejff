@@ -18,6 +18,8 @@ EJFF is an engine made for fun and experimenting with graphics and game developm
 # Dependencies
 - SDL3
 - SDL3_image
+- glm
+- fmt
 
 # Building
 ```bash
