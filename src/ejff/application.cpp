@@ -1,6 +1,7 @@
 #include "ejff/application.hpp"
 
 #include "ejff/gpu/resources/command_buffer.hpp"
+#include "ejff/gpu/resources/copy_pass.hpp"
 #include "ejff/gpu/resources/render_pass.hpp"
 #include "ejff/gpu/resources/shader.hpp"
 #include "ejff/gpu/resources/transfer_buffer.hpp"
@@ -84,7 +85,7 @@ Application::Application()
     SDL_UnmapGPUTransferBuffer(device_.get(), transfer_buffer.get());
 
     gpu::resources::CommandBuffer command_buffer(device_);
-    SDL_GPUCopyPass *copy_pass = SDL_BeginGPUCopyPass(command_buffer.get());
+    gpu::resources::CopyPass copy_pass(command_buffer);
 
     SDL_GPUTransferBufferLocation vertex_transfer_buffer_location{};
     vertex_transfer_buffer_location.transfer_buffer = transfer_buffer.get();
@@ -95,7 +96,7 @@ Application::Application()
     vertex_buffer_region.offset = 0;
     vertex_buffer_region.size = sizeof(gpu::resources::Vertex) * vertices.size();
 
-    SDL_UploadToGPUBuffer(copy_pass, &vertex_transfer_buffer_location, &vertex_buffer_region,
+    SDL_UploadToGPUBuffer(copy_pass.get(), &vertex_transfer_buffer_location, &vertex_buffer_region,
                           false);
 
     SDL_GPUTransferBufferLocation index_transfer_buffer_location{};
@@ -107,9 +108,7 @@ Application::Application()
     index_buffer_region.offset = 0;
     index_buffer_region.size = sizeof(Uint32) * indices.size();
 
-    SDL_UploadToGPUBuffer(copy_pass, &index_transfer_buffer_location, &index_buffer_region, false);
-
-    SDL_EndGPUCopyPass(copy_pass);
+    SDL_UploadToGPUBuffer(copy_pass.get(), &index_transfer_buffer_location, &index_buffer_region, false);
 }
 
 Application::~Application()
