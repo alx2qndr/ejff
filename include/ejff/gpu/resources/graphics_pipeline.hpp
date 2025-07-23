@@ -60,10 +60,11 @@ public:
 
     SDL_GPUGraphicsPipeline *release() noexcept { return ptr_.release(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
     SDL_GPUGraphicsPipeline *get() noexcept { return ptr_.get(); }
+    
     SDL_GPUGraphicsPipeline *get() const noexcept { return ptr_.get(); }
+
+    explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
 private:
     std::unique_ptr<SDL_GPUGraphicsPipeline, SDL_GPUGraphicsPipelineDeleter> ptr_;

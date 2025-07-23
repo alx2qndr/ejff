@@ -43,10 +43,11 @@ public:
 
     SDL_GPUBuffer *release() noexcept { return ptr_.release(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
     SDL_GPUBuffer *get() noexcept { return ptr_.get(); }
+    
     SDL_GPUBuffer *get() const noexcept { return ptr_.get(); }
+
+    explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
 private:
     std::unique_ptr<SDL_GPUBuffer, SDL_GPUBufferDeleter> ptr_;

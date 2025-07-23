@@ -46,10 +46,11 @@ public:
 
     SDL_GPUTransferBuffer *release() noexcept { return ptr_.release(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
     SDL_GPUTransferBuffer *get() noexcept { return ptr_.get(); }
+    
     SDL_GPUTransferBuffer *get() const noexcept { return ptr_.get(); }
+
+    explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
 private:
     std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_;

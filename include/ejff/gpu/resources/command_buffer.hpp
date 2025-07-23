@@ -42,10 +42,11 @@ public:
 
     SDL_GPUCommandBuffer *release() noexcept { return ptr_.release(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
     SDL_GPUCommandBuffer *get() noexcept { return ptr_.get(); }
+    
     SDL_GPUCommandBuffer *get() const noexcept { return ptr_.get(); }
+
+    explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
 private:
     std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_;
