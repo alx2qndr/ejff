@@ -35,6 +35,9 @@ public:
 
     ~CopyPass() = default;
 
+    void upload(SDL_GPUTransferBufferLocation source, SDL_GPUBufferRegion destination,
+                bool cycle = false);
+
     void reset(SDL_GPUCopyPass *new_copy_pass = nullptr) noexcept { ptr_.reset(new_copy_pass); }
 
     SDL_GPUCopyPass *release() noexcept { return ptr_.release(); }

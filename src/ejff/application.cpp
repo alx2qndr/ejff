@@ -87,28 +87,27 @@ Application::Application()
     gpu::resources::CommandBuffer command_buffer(device_);
     gpu::resources::CopyPass copy_pass(command_buffer);
 
-    SDL_GPUTransferBufferLocation vertex_transfer_buffer_location{};
-    vertex_transfer_buffer_location.transfer_buffer = transfer_buffer.get();
-    vertex_transfer_buffer_location.offset = 0;
+    SDL_GPUTransferBufferLocation vertex_transfer_buffer_source{};
+    vertex_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
+    vertex_transfer_buffer_source.offset = 0;
 
-    SDL_GPUBufferRegion vertex_buffer_region{};
-    vertex_buffer_region.buffer = vertex_buffer_.get();
-    vertex_buffer_region.offset = 0;
-    vertex_buffer_region.size = sizeof(gpu::resources::Vertex) * vertices.size();
+    SDL_GPUBufferRegion vertex_buffer_destination{};
+    vertex_buffer_destination.buffer = vertex_buffer_.get();
+    vertex_buffer_destination.offset = 0;
+    vertex_buffer_destination.size = sizeof(gpu::resources::Vertex) * vertices.size();
 
-    SDL_UploadToGPUBuffer(copy_pass.get(), &vertex_transfer_buffer_location, &vertex_buffer_region,
-                          false);
+    copy_pass.upload(vertex_transfer_buffer_source, vertex_buffer_destination, false);
 
-    SDL_GPUTransferBufferLocation index_transfer_buffer_location{};
-    index_transfer_buffer_location.transfer_buffer = transfer_buffer.get();
-    index_transfer_buffer_location.offset = sizeof(gpu::resources::Vertex) * vertices.size();
+    SDL_GPUTransferBufferLocation index_transfer_buffer_source{};
+    index_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
+    index_transfer_buffer_source.offset = sizeof(gpu::resources::Vertex) * vertices.size();
 
-    SDL_GPUBufferRegion index_buffer_region{};
-    index_buffer_region.buffer = index_buffer_.get();
-    index_buffer_region.offset = 0;
-    index_buffer_region.size = sizeof(Uint32) * indices.size();
+    SDL_GPUBufferRegion index_buffer_destination{};
+    index_buffer_destination.buffer = index_buffer_.get();
+    index_buffer_destination.offset = 0;
+    index_buffer_destination.size = sizeof(Uint32) * indices.size();
 
-    SDL_UploadToGPUBuffer(copy_pass.get(), &index_transfer_buffer_location, &index_buffer_region, false);
+    copy_pass.upload(index_transfer_buffer_source, index_buffer_destination, false);
 }
 
 Application::~Application()
