@@ -4,7 +4,7 @@ if (NOT EXISTS ${CPM_DOWNLOAD_LOCATION})
     file(DOWNLOAD
         https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.42.0/CPM.cmake
         ${CPM_DOWNLOAD_LOCATION}
-        EXPECTED_HASH SHA256=78ba32abdf798bc616bab7c73aac32a17bbd7b06ad9e26a6add69de8f3ae4791
+        EXPECTED_HASH SHA256=2020b4fc42dba44817983e06342e682ecfc3d2f484a581f11cc5731fbe4dce8a
     )
 endif()
 
