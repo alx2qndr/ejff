@@ -24,7 +24,7 @@ EJFF is an engine made for fun and experimenting with graphics and game developm
 # Building
 ```bash
 git clone https://github.com/alx2qndr/EJFF.git
-cd EJFF
+cd ejff
 mkdir build && cd build
 cmake ..
 cmake --build .

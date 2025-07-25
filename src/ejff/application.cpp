@@ -58,6 +58,7 @@ Application::Application()
                                              "SDL_ClaimWindowForGPUDevice failed: {}",
                                              SDL_GetError()));
     }
+
     auto vertex_shader =
         gpu::resources::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
     auto fragment_shader =
@@ -76,13 +77,10 @@ Application::Application()
         device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
         sizeof(gpu::resources::Vertex) * vertices.size() + sizeof(Uint32) * indices.size());
 
-    const auto mapped_data = SDL_MapGPUTransferBuffer(device_.get(), transfer_buffer.get(), false);
-
-    std::memcpy(mapped_data, vertices.data(), sizeof(gpu::resources::Vertex) * vertices.size());
-    std::memcpy(static_cast<Uint8 *>(mapped_data) +
-                    sizeof(gpu::resources::Vertex) * vertices.size(),
-                indices.data(), sizeof(uint32_t) * indices.size());
-    SDL_UnmapGPUTransferBuffer(device_.get(), transfer_buffer.get());
+    transfer_buffer.upload(device_, vertices.data(),
+                           sizeof(gpu::resources::Vertex) * vertices.size(), 0);
+    transfer_buffer.upload(device_, indices.data(), sizeof(uint32_t) * indices.size(),
+                           sizeof(gpu::resources::Vertex) * vertices.size());
 
     gpu::resources::CommandBuffer command_buffer(device_);
     gpu::resources::CopyPass copy_pass(command_buffer);

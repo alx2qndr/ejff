@@ -43,7 +43,7 @@ public:
     SDL_GPUCommandBuffer *release() noexcept { return ptr_.release(); }
 
     SDL_GPUCommandBuffer *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPUCommandBuffer *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }

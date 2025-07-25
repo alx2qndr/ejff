@@ -39,6 +39,8 @@ public:
 
     ~TransferBuffer() = default;
 
+    void upload(Device &device, const void *data, std::size_t size, std::size_t offset = 0);
+    
     void reset(SDL_GPUTransferBuffer *new_transfer_buffer = nullptr) noexcept
     {
         ptr_.reset(new_transfer_buffer);
