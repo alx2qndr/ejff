@@ -22,10 +22,11 @@ EJFF is an engine made for fun and experimenting with graphics and game developm
 - fmt
 
 # Building
-```bash
+```powershell
 git clone https://github.com/alx2qndr/ejff.git
 cd ejff
-mkdir build && cd build
+mkdir build
+cd build
 cmake ..
 cmake --build .
 ```
