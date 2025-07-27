@@ -22,7 +22,7 @@ EJFF is an engine made for fun and experimenting with graphics and game developm
 - fmt
 
 # Building
-```powershell
+```bath
 git clone https://github.com/alx2qndr/ejff.git
 cd ejff
 mkdir build
