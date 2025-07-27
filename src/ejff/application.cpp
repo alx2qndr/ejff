@@ -6,6 +6,7 @@
 #include "ejff/gpu/resources/shader.hpp"
 #include "ejff/gpu/resources/transfer_buffer.hpp"
 #include "ejff/gpu/resources/vertex.hpp"
+#include "ejff/surface.hpp"
 
 #include <vector>
 
@@ -62,7 +63,7 @@ Application::Application()
     auto vertex_shader =
         gpu::resources::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
     auto fragment_shader =
-        gpu::resources::Shader(device_, "../shaders/src/triangle.frag", 0, 0, 0, 0);
+        gpu::resources::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
     graphics_pipeline_ = ejff::gpu::resources::GraphicsPipeline::create_default_pipeline(
         device_, vertex_shader, fragment_shader, window_);
@@ -94,7 +95,7 @@ Application::Application()
     vertex_buffer_destination.offset = 0;
     vertex_buffer_destination.size = sizeof(gpu::resources::Vertex) * vertices.size();
 
-    copy_pass.upload(vertex_transfer_buffer_source, vertex_buffer_destination, false);
+    copy_pass.upload_to_buffer(vertex_transfer_buffer_source, vertex_buffer_destination, false);
 
     SDL_GPUTransferBufferLocation index_transfer_buffer_source{};
     index_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
@@ -105,7 +106,40 @@ Application::Application()
     index_buffer_destination.offset = 0;
     index_buffer_destination.size = sizeof(Uint32) * indices.size();
 
-    copy_pass.upload(index_transfer_buffer_source, index_buffer_destination, false);
+    copy_pass.upload_to_buffer(index_transfer_buffer_source, index_buffer_destination, false);
+
+    sampler_ = gpu::resources::Sampler(
+        device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR, SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+        SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+        SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f, SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f,
+        false, false);
+
+    auto image_surface = Surface::load_image("../assets/textures/003_basecolor_0.png");
+    image_surface.convert(SDL_PIXELFORMAT_RGBA8888);
+
+    texture_ = gpu::resources::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
+                                       SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+                                       SDL_GPU_TEXTUREUSAGE_SAMPLER, image_surface.get()->w,
+                                       image_surface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
+
+    gpu::resources::TransferBuffer texture_transfer_buffer(
+        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+        image_surface.get()->h * image_surface.get()->pitch);
+
+    texture_transfer_buffer.upload(device_, image_surface.get()->pixels,
+                                   image_surface.get()->h * image_surface.get()->pitch);
+
+    SDL_GPUTextureTransferInfo texture_transfer_source{};
+    texture_transfer_source.transfer_buffer = texture_transfer_buffer.get();
+    texture_transfer_source.offset = 0;
+
+    SDL_GPUTextureRegion texture_transfer_destination{};
+    texture_transfer_destination.texture = texture_.get();
+    texture_transfer_destination.w = image_surface.get()->w;
+    texture_transfer_destination.h = image_surface.get()->h;
+    texture_transfer_destination.d = 1;
+
+    copy_pass.upload_to_texture(texture_transfer_source, texture_transfer_destination, false);
 }
 
 Application::~Application()
@@ -156,6 +190,13 @@ void Application::iterate()
 
         SDL_BindGPUIndexBuffer(render_pass.get(), &index_buffer_binding,
                                SDL_GPU_INDEXELEMENTSIZE_32BIT);
+
+        SDL_GPUTextureSamplerBinding texture_sampler_binding{};
+        texture_sampler_binding.texture = texture_.get();
+        texture_sampler_binding.sampler = sampler_.get();
+
+        SDL_BindGPUFragmentSamplers(render_pass.get(), 0, &texture_sampler_binding, 1);
+
         SDL_DrawGPUIndexedPrimitives(render_pass.get(), static_cast<Uint32>(indices.size()), 1, 0,
                                      0, 0);
     }

@@ -19,10 +19,16 @@ CopyPass::CopyPass(CommandBuffer &command_buffer) : ptr_(nullptr, SDL_GPUCopyPas
     ptr_.reset(copy_pass);
 }
 
-void CopyPass::upload(SDL_GPUTransferBufferLocation source, SDL_GPUBufferRegion destination,
-                      bool cycle)
+void CopyPass::upload_to_buffer(SDL_GPUTransferBufferLocation source,
+                                SDL_GPUBufferRegion destination, bool cycle)
 {
     SDL_UploadToGPUBuffer(ptr_.get(), &source, &destination, cycle);
+}
+
+void CopyPass::upload_to_texture(SDL_GPUTextureTransferInfo source,
+                                 SDL_GPUTextureRegion destination, bool cycle)
+{
+    SDL_UploadToGPUTexture(ptr_.get(), &source, &destination, cycle);
 }
 
 } // namespace ejff::gpu::resources

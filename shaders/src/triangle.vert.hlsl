@@ -19,5 +19,7 @@ Output main(Input input)
     Output output;
     output.color = input.color;
     output.position = float4(input.position, 1.0f);
+    output.uv = input.uv;
+    output.normal = input.normal;
     return output;
 }

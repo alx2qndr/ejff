@@ -3,6 +3,8 @@
 #include "ejff/gpu/device.hpp"
 #include "ejff/gpu/resources/buffer.hpp"
 #include "ejff/gpu/resources/graphics_pipeline.hpp"
+#include "ejff/gpu/resources/sampler.hpp"
+#include "ejff/gpu/resources/texture.hpp"
 #include "ejff/window.hpp"
 
 #include <SDL3/SDL.h>
@@ -32,6 +34,8 @@ private:
     gpu::resources::GraphicsPipeline graphics_pipeline_;
     gpu::resources::Buffer vertex_buffer_;
     gpu::resources::Buffer index_buffer_;
+    gpu::resources::Texture texture_;
+    gpu::resources::Sampler sampler_;
 };
 
 } // namespace ejff
