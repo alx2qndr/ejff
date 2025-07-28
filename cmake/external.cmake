@@ -27,8 +27,8 @@ CPMAddPackage("gh:fmtlib/fmt#11.2.0")
 list(APPEND EJFF_EXTERNAL_LIBRARIES
     SDL3::SDL3
     SDL3_image::SDL3_image
-    glm::glm
-    fmt::fmt
+    glm::glm-header-only
+    fmt::fmt-header-only
 )
 
 target_link_libraries(external INTERFACE ${EJFF_EXTERNAL_LIBRARIES})

@@ -18,12 +18,8 @@ include(cmake/sources.cmake)
 
 add_executable(${PROJECT_NAME} ${EJFF_SOURCES})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "ejff")
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-
-target_include_directories(${PROJECT_NAME} 
-    PRIVATE "${PROJECT_SOURCE_DIR}/include"
-)
-
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE external::external
-)
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/include")
+target_link_libraries(${PROJECT_NAME} PRIVATE external::external)
