@@ -25,7 +25,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
         }
 
         auto *state = new AppState();
-        state->app.init();
+        state->app.init(argc, argv);
         *appstate = state;
     }
     catch (const std::exception &e)
@@ -81,6 +81,13 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
             std::cerr << fmt::format(
                 "Couldn't quit application. SDL_AppQuit failed: {}\n", e.what());
         }
+    }
+
+    if (result == SDL_APP_FAILURE)
+    {
+        std::cerr << fmt::format(
+            "Application quit failed. SDL_AppQuit reported failure: {}\n",
+            SDL_GetError());
     }
 
     SDL_Quit();

@@ -8,6 +8,7 @@
 #include "ejff/gpu/resources/vertex.hpp"
 #include "ejff/surface.hpp"
 
+#include <iostream>
 #include <vector>
 
 #include <fmt/format.h>
@@ -44,8 +45,15 @@ std::vector<gpu::Vertex> vertices = {
 
 std::vector<Uint32> indices = {0, 1, 2, 2, 1, 3};
 
-void Application::init()
+void Application::init(int argc, char **argv)
 {
+    std::vector<std::string_view> args(argv, argv + argc);
+
+    for (const auto &arg : args)
+    {
+        std::cout << arg << '\n';
+    }
+
     window_ = Window("Hello, Engine Just For Fun (EJFF for short)!", 1280, 720,
                      Window::Flags::eResizable | Window::Flags::eHighPixelDensity);
 

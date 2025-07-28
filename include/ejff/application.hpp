@@ -25,7 +25,7 @@ public:
 
     ~Application();
 
-    void init();
+    void init(int argc, char **argv);
     void iterate();
     SDL_AppResult event(const SDL_Event &event);
 
