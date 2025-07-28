@@ -35,13 +35,16 @@ public:
 
     ~CopyPass() = default;
 
-    void upload_to_buffer(SDL_GPUTransferBufferLocation source, SDL_GPUBufferRegion destination,
-                          bool cycle = false);
+    void upload_to_buffer(SDL_GPUTransferBufferLocation source,
+                          SDL_GPUBufferRegion destination, bool cycle = false);
 
-    void upload_to_texture(SDL_GPUTextureTransferInfo source, SDL_GPUTextureRegion destination,
-                           bool cycle = false);
+    void upload_to_texture(SDL_GPUTextureTransferInfo source,
+                           SDL_GPUTextureRegion destination, bool cycle = false);
 
-    void reset(SDL_GPUCopyPass *new_copy_pass = nullptr) noexcept { ptr_.reset(new_copy_pass); }
+    void reset(SDL_GPUCopyPass *new_copy_pass = nullptr) noexcept
+    {
+        ptr_.reset(new_copy_pass);
+    }
 
     SDL_GPUCopyPass *release() noexcept { return ptr_.release(); }
 

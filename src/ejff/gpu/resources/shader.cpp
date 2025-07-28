@@ -12,7 +12,8 @@ namespace ejff::gpu
 {
 
 Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_samplers,
-               Uint32 num_storage_textures, Uint32 num_storage_buffers, Uint32 num_uniform_buffers)
+               Uint32 num_storage_textures, Uint32 num_storage_buffers,
+               Uint32 num_uniform_buffers)
     : ptr_(nullptr, SDL_GPUShaderDeleter{device.get()})
 {
     auto const extension = path.extension().string();
@@ -28,7 +29,8 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
     }
     else
     {
-        throw std::runtime_error(fmt::format("Invalid shader extension '{}'.", extension));
+        throw std::runtime_error(
+            fmt::format("Invalid shader extension '{}'.", extension));
     }
 
     SDL_GPUShaderFormat backend_formats = SDL_GetGPUShaderFormats(device.get());
@@ -64,7 +66,8 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
     }
 
     auto filename = path.filename();
-    std::filesystem::path binary_path = path.parent_path().parent_path() / "bin" / format_folder;
+    std::filesystem::path binary_path =
+        path.parent_path().parent_path() / "bin" / format_folder;
     binary_path /= filename;
     binary_path += "." + format_ext;
 
@@ -101,8 +104,9 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
     auto shader = SDL_CreateGPUShader(device.get(), &createinfo);
     if (!shader)
     {
-        throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_GPUShader. SDL_CreateGPUShader failed: {}", SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't create SDL_GPUShader. SDL_CreateGPUShader failed: {}",
+                        SDL_GetError()));
     }
 
     ptr_.reset(shader);

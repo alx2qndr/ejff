@@ -38,7 +38,7 @@ public:
     SDL_GPUDevice *release() noexcept { return ptr_.release(); }
 
     SDL_GPUDevice *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPUDevice *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }

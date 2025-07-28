@@ -40,8 +40,9 @@ void Surface::convert(SDL_PixelFormat format)
     auto surface = SDL_ConvertSurface(ptr_.get(), format);
     if (!surface)
     {
-        throw std::runtime_error(fmt::format(
-            "Couldn't convert SDL_Surface. SDL_ConvertSurface failed: {}", SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't convert SDL_Surface. SDL_ConvertSurface failed: {}",
+                        SDL_GetError()));
     }
 
     ptr_.reset(surface);

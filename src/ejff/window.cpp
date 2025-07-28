@@ -13,8 +13,8 @@ Window::Window(std::string_view title, int width, int height, SDL_WindowFlags fl
     auto window = SDL_CreateWindow(title.data(), width, height, flags);
     if (!window)
     {
-        throw std::runtime_error(
-            fmt::format("Couldn't create SDL_Window. SDL_CreateWindow failed: {}", SDL_GetError()));
+        throw std::runtime_error(fmt::format(
+            "Couldn't create SDL_Window. SDL_CreateWindow failed: {}", SDL_GetError()));
     }
 
     ptr_.reset(window);

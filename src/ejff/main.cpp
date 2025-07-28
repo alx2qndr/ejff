@@ -14,14 +14,14 @@ struct AppState
     ejff::Application app;
 };
 
-SDL_AppResult SDL_AppInit(void **appstate, [[maybe_unused]] int argc, [[maybe_unused]] char **argv)
+SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
 {
     try
     {
         if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO))
         {
-            throw std::runtime_error(
-                fmt::format("Couldn't initialize SDL. SDL_Init failed: {}", SDL_GetError()));
+            throw std::runtime_error(fmt::format(
+                "Couldn't initialize SDL. SDL_Init failed: {}", SDL_GetError()));
         }
 
         auto *state = new AppState();
@@ -29,8 +29,8 @@ SDL_AppResult SDL_AppInit(void **appstate, [[maybe_unused]] int argc, [[maybe_un
     }
     catch (const std::exception &e)
     {
-        std::cerr << fmt::format("Couldn't initialize application. Thrown exception: {}\n",
-                                 e.what());
+        std::cerr << fmt::format(
+            "Couldn't initialize application. Thrown exception: {}\n", e.what());
         return SDL_APP_FAILURE;
     }
 
@@ -51,7 +51,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     }
     catch (const std::exception &e)
     {
-        std::cerr << fmt::format("Couldn't iterate application. Thrown exception: {}\n", e.what());
+        std::cerr << fmt::format("Couldn't iterate application. Thrown exception: {}\n",
+                                 e.what());
         return SDL_APP_FAILURE;
     }
 
@@ -64,7 +65,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     return state->app.event(*event);
 }
 
-void SDL_AppQuit(void *appstate, [[maybe_unused]] SDL_AppResult result)
+void SDL_AppQuit(void *appstate, SDL_AppResult result)
 {
     auto *state = static_cast<AppState *>(appstate);
     if (state)
@@ -75,7 +76,8 @@ void SDL_AppQuit(void *appstate, [[maybe_unused]] SDL_AppResult result)
         }
         catch (const std::exception &e)
         {
-            std::cerr << fmt::format("Couldn't quit application. Thrown exception: {}\n", e.what());
+            std::cerr << fmt::format("Couldn't quit application. Thrown exception: {}\n",
+                                     e.what());
         }
     }
 

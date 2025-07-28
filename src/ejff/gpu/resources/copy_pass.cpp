@@ -7,13 +7,15 @@
 namespace ejff::gpu
 {
 
-CopyPass::CopyPass(CommandBuffer &command_buffer) : ptr_(nullptr, SDL_GPUCopyPassDeleter{})
+CopyPass::CopyPass(CommandBuffer &command_buffer)
+    : ptr_(nullptr, SDL_GPUCopyPassDeleter{})
 {
     auto copy_pass = SDL_BeginGPUCopyPass(command_buffer.get());
     if (!copy_pass)
     {
         throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_GPUCopyPass. SDL_BeginGPUCopyPass failed: {}", SDL_GetError()));
+            "Couldn't create SDL_GPUCopyPass. SDL_BeginGPUCopyPass failed: {}",
+            SDL_GetError()));
     }
 
     ptr_.reset(copy_pass);

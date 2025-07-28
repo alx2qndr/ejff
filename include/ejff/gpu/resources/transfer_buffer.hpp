@@ -29,7 +29,8 @@ class TransferBuffer
 public:
     TransferBuffer() = default;
 
-    explicit TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage, Uint32 size);
+    explicit TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage,
+                            Uint32 size);
 
     TransferBuffer(const TransferBuffer &) = delete;
     TransferBuffer &operator=(const TransferBuffer &) = delete;
@@ -39,8 +40,9 @@ public:
 
     ~TransferBuffer() = default;
 
-    void upload(Device &device, const void *data, std::size_t size, std::size_t offset = 0);
-    
+    void upload(Device &device, const void *data, std::size_t size,
+                std::size_t offset = 0);
+
     void reset(SDL_GPUTransferBuffer *new_transfer_buffer = nullptr) noexcept
     {
         ptr_.reset(new_transfer_buffer);
@@ -49,7 +51,7 @@ public:
     SDL_GPUTransferBuffer *release() noexcept { return ptr_.release(); }
 
     SDL_GPUTransferBuffer *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPUTransferBuffer *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }

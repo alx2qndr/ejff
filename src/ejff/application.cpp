@@ -55,19 +55,21 @@ Application::Application()
 
     if (!SDL_ClaimWindowForGPUDevice(device_.get(), window_.get()))
     {
-        throw std::runtime_error(fmt::format("Couldn't claim SDL_GPUWindow for SDL_GPUDevice. "
-                                             "SDL_ClaimWindowForGPUDevice failed: {}",
-                                             SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't claim SDL_GPUWindow for SDL_GPUDevice. "
+                        "SDL_ClaimWindowForGPUDevice failed: {}",
+                        SDL_GetError()));
     }
 
     auto vertex_shader = gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
-    auto fragment_shader = gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
+    auto fragment_shader =
+        gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
     graphics_pipeline_ = ejff::gpu::GraphicsPipeline::create_default_pipeline(
         device_, vertex_shader, fragment_shader, window_);
 
-    vertex_buffer_ =
-        gpu::Buffer(device_, SDL_GPU_BUFFERUSAGE_VERTEX, sizeof(gpu::Vertex) * vertices.size());
+    vertex_buffer_ = gpu::Buffer(device_, SDL_GPU_BUFFERUSAGE_VERTEX,
+                                 sizeof(gpu::Vertex) * vertices.size());
 
     index_buffer_ =
         gpu::Buffer(device_, SDL_GPU_BUFFERUSAGE_INDEX, sizeof(Uint32) * indices.size());
@@ -76,7 +78,8 @@ Application::Application()
                                         sizeof(gpu::Vertex) * vertices.size() +
                                             sizeof(Uint32) * indices.size());
 
-    transfer_buffer.upload(device_, vertices.data(), sizeof(gpu::Vertex) * vertices.size(), 0);
+    transfer_buffer.upload(device_, vertices.data(),
+                           sizeof(gpu::Vertex) * vertices.size(), 0);
     transfer_buffer.upload(device_, indices.data(), sizeof(uint32_t) * indices.size(),
                            sizeof(gpu::Vertex) * vertices.size());
 
@@ -92,7 +95,8 @@ Application::Application()
     vertex_buffer_destination.offset = 0;
     vertex_buffer_destination.size = sizeof(gpu::Vertex) * vertices.size();
 
-    copy_pass.upload_to_buffer(vertex_transfer_buffer_source, vertex_buffer_destination, false);
+    copy_pass.upload_to_buffer(vertex_transfer_buffer_source, vertex_buffer_destination,
+                               false);
 
     SDL_GPUTransferBufferLocation index_transfer_buffer_source{};
     index_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
@@ -103,24 +107,27 @@ Application::Application()
     index_buffer_destination.offset = 0;
     index_buffer_destination.size = sizeof(Uint32) * indices.size();
 
-    copy_pass.upload_to_buffer(index_transfer_buffer_source, index_buffer_destination, false);
+    copy_pass.upload_to_buffer(index_transfer_buffer_source, index_buffer_destination,
+                               false);
 
-    sampler_ = gpu::Sampler(
-        device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR, SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
-        SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-        SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f, SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f,
-        false, false);
+    sampler_ = gpu::Sampler(device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR,
+                            SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f,
+                            SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f, false, false);
 
     auto image_surface = Surface::load_image("../assets/textures/003_basecolor_0.png");
     image_surface.convert(SDL_PIXELFORMAT_ABGR8888);
 
-    texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
+                            SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
                             SDL_GPU_TEXTUREUSAGE_SAMPLER, image_surface.get()->w,
                             image_surface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
 
-    gpu::TransferBuffer texture_transfer_buffer(device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-                                                image_surface.get()->h *
-                                                    image_surface.get()->pitch);
+    gpu::TransferBuffer texture_transfer_buffer(
+        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+        image_surface.get()->h * image_surface.get()->pitch);
 
     texture_transfer_buffer.upload(device_, image_surface.get()->pixels,
                                    image_surface.get()->h * image_surface.get()->pitch);
@@ -135,7 +142,8 @@ Application::Application()
     texture_transfer_destination.h = image_surface.get()->h;
     texture_transfer_destination.d = 1;
 
-    copy_pass.upload_to_texture(texture_transfer_source, texture_transfer_destination, false);
+    copy_pass.upload_to_texture(texture_transfer_source, texture_transfer_destination,
+                                false);
 }
 
 Application::~Application()
@@ -157,9 +165,10 @@ void Application::iterate()
     if (!SDL_WaitAndAcquireGPUSwapchainTexture(command_buffer.get(), window_.get(),
                                                &swapchain_texture, nullptr, nullptr))
     {
-        throw std::runtime_error(fmt::format("Couldn't acquire SDL_GPUTexture. "
-                                             "SDL_WaitAndAcquireGPUSwapchainTexture failed: {}",
-                                             SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't acquire SDL_GPUTexture. "
+                        "SDL_WaitAndAcquireGPUSwapchainTexture failed: {}",
+                        SDL_GetError()));
     }
 
     if (swapchain_texture)
@@ -193,8 +202,8 @@ void Application::iterate()
 
         SDL_BindGPUFragmentSamplers(render_pass.get(), 0, &texture_sampler_binding, 1);
 
-        SDL_DrawGPUIndexedPrimitives(render_pass.get(), static_cast<Uint32>(indices.size()), 1, 0,
-                                     0, 0);
+        SDL_DrawGPUIndexedPrimitives(render_pass.get(),
+                                     static_cast<Uint32>(indices.size()), 1, 0, 0, 0);
     }
 }
 

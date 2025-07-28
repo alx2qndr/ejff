@@ -32,7 +32,8 @@ class GraphicsPipeline
 public:
     GraphicsPipeline() = default;
 
-    explicit GraphicsPipeline(Device &device, Shader &vertex_shader, Shader &fragment_shader,
+    explicit GraphicsPipeline(Device &device, Shader &vertex_shader,
+                              Shader &fragment_shader,
                               SDL_GPUVertexInputState vertex_input_state,
                               SDL_GPUPrimitiveType primitive_type,
                               SDL_GPURasterizerState rasterizer_state,
@@ -49,7 +50,8 @@ public:
     ~GraphicsPipeline() = default;
 
     static GraphicsPipeline create_default_pipeline(Device &device, Shader &vertex_shader,
-                                                    Shader &fragment_shader, Window &window);
+                                                    Shader &fragment_shader,
+                                                    Window &window);
 
     void bind(RenderPass &render_pass);
 
@@ -61,7 +63,7 @@ public:
     SDL_GPUGraphicsPipeline *release() noexcept { return ptr_.release(); }
 
     SDL_GPUGraphicsPipeline *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPUGraphicsPipeline *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }

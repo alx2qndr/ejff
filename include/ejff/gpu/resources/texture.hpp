@@ -42,7 +42,10 @@ public:
 
     ~Texture() = default;
 
-    void reset(SDL_GPUTexture *new_texture = nullptr) noexcept { ptr_.reset(new_texture); }
+    void reset(SDL_GPUTexture *new_texture = nullptr) noexcept
+    {
+        ptr_.reset(new_texture);
+    }
 
     SDL_GPUTexture *release() noexcept { return ptr_.release(); }
 

@@ -8,7 +8,8 @@
 namespace ejff::gpu
 {
 
-GraphicsPipeline::GraphicsPipeline(Device &device, Shader &vertex_shader, Shader &fragment_shader,
+GraphicsPipeline::GraphicsPipeline(Device &device, Shader &vertex_shader,
+                                   Shader &fragment_shader,
                                    SDL_GPUVertexInputState vertex_input_state,
                                    SDL_GPUPrimitiveType primitive_type,
                                    SDL_GPURasterizerState rasterizer_state,
@@ -31,19 +32,22 @@ GraphicsPipeline::GraphicsPipeline(Device &device, Shader &vertex_shader, Shader
     auto graphics_pipeline = SDL_CreateGPUGraphicsPipeline(device.get(), &createinfo);
     if (!graphics_pipeline)
     {
-        throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_GPUGraphicsPipeline. SDL_CreateGPUGraphicsPipeline failed: {}",
-            SDL_GetError()));
+        throw std::runtime_error(fmt::format("Couldn't create SDL_GPUGraphicsPipeline. "
+                                             "SDL_CreateGPUGraphicsPipeline failed: {}",
+                                             SDL_GetError()));
     }
 
     ptr_.reset(graphics_pipeline);
 }
 
-GraphicsPipeline GraphicsPipeline::create_default_pipeline(Device &device, Shader &vertex_shader,
-                                                           Shader &fragment_shader, Window &window)
+GraphicsPipeline GraphicsPipeline::create_default_pipeline(Device &device,
+                                                           Shader &vertex_shader,
+                                                           Shader &fragment_shader,
+                                                           Window &window)
 {
     SDL_GPUColorTargetDescription color_target_description{};
-    color_target_description.format = SDL_GetGPUSwapchainTextureFormat(device.get(), window.get());
+    color_target_description.format =
+        SDL_GetGPUSwapchainTextureFormat(device.get(), window.get());
 
     auto vertex_attributes = Vertex::get_vertex_attributes();
     auto vertex_buffer_description = Vertex::get_vertex_buffer_description();
@@ -52,7 +56,8 @@ GraphicsPipeline GraphicsPipeline::create_default_pipeline(Device &device, Shade
     vertex_input_state.vertex_buffer_descriptions = &vertex_buffer_description;
     vertex_input_state.num_vertex_buffers = 1;
     vertex_input_state.vertex_attributes = vertex_attributes.data();
-    vertex_input_state.num_vertex_attributes = static_cast<Uint32>(vertex_attributes.size());
+    vertex_input_state.num_vertex_attributes =
+        static_cast<Uint32>(vertex_attributes.size());
 
     SDL_GPURasterizerState rasterizer_state{};
     SDL_GPUMultisampleState multisample_state{};
@@ -63,8 +68,8 @@ GraphicsPipeline GraphicsPipeline::create_default_pipeline(Device &device, Shade
     target_info.num_color_targets = 1;
 
     return GraphicsPipeline(device, vertex_shader, fragment_shader, vertex_input_state,
-                            SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, rasterizer_state, multisample_state,
-                            depth_stencil_state, target_info);
+                            SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, rasterizer_state,
+                            multisample_state, depth_stencil_state, target_info);
 }
 
 void GraphicsPipeline::bind(RenderPass &render_pass)

@@ -17,8 +17,9 @@ Buffer::Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size)
     auto buffer = SDL_CreateGPUBuffer(device.get(), &createinfo);
     if (!buffer)
     {
-        throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_GPUBuffer. SDL_CreateGPUBuffer failed: {}", SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't create SDL_GPUBuffer. SDL_CreateGPUBuffer failed: {}",
+                        SDL_GetError()));
     }
 
     ptr_.reset(buffer);

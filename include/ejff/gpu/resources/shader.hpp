@@ -30,9 +30,9 @@ class Shader
 public:
     Shader() = default;
 
-    explicit Shader(Device &device, const std::filesystem::path &path, Uint32 num_samplers = 0,
-                    Uint32 num_storage_textures = 0, Uint32 num_storage_buffers = 0,
-                    Uint32 num_uniform_buffers = 0);
+    explicit Shader(Device &device, const std::filesystem::path &path,
+                    Uint32 num_samplers = 0, Uint32 num_storage_textures = 0,
+                    Uint32 num_storage_buffers = 0, Uint32 num_uniform_buffers = 0);
 
     Shader(const Shader &) = delete;
     Shader &operator=(const Shader &) = delete;
@@ -47,7 +47,7 @@ public:
     SDL_GPUShader *release() noexcept { return ptr_.release(); }
 
     SDL_GPUShader *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPUShader *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }

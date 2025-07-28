@@ -30,7 +30,8 @@ public:
     Sampler() = default;
 
     explicit Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_filter,
-                     SDL_GPUSamplerMipmapMode mipmap_mode, SDL_GPUSamplerAddressMode address_mode_u,
+                     SDL_GPUSamplerMipmapMode mipmap_mode,
+                     SDL_GPUSamplerAddressMode address_mode_u,
                      SDL_GPUSamplerAddressMode address_mode_v,
                      SDL_GPUSamplerAddressMode address_mode_w, float mip_lod_bias,
                      float max_anisotropy, SDL_GPUCompareOp compare_op, float min_lod,
@@ -44,7 +45,10 @@ public:
 
     ~Sampler() = default;
 
-    void reset(SDL_GPUSampler *new_sampler = nullptr) noexcept { ptr_.reset(new_sampler); }
+    void reset(SDL_GPUSampler *new_sampler = nullptr) noexcept
+    {
+        ptr_.reset(new_sampler);
+    }
 
     SDL_GPUSampler *release() noexcept { return ptr_.release(); }
 

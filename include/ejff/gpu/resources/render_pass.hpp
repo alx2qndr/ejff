@@ -26,7 +26,8 @@ public:
     RenderPass() = default;
 
     explicit RenderPass(CommandBuffer &command_buffer,
-                        const SDL_GPUColorTargetInfo *color_target_infos, Uint32 num_color_targets,
+                        const SDL_GPUColorTargetInfo *color_target_infos,
+                        Uint32 num_color_targets,
                         const SDL_GPUDepthStencilTargetInfo *depth_stencil_target_info);
 
     RenderPass(const RenderPass &) = delete;
@@ -45,7 +46,7 @@ public:
     SDL_GPURenderPass *release() noexcept { return ptr_.release(); }
 
     SDL_GPURenderPass *get() noexcept { return ptr_.get(); }
-    
+
     SDL_GPURenderPass *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
