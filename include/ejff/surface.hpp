@@ -39,6 +39,8 @@ public:
 
     void convert(SDL_PixelFormat format);
 
+    void flip(SDL_FlipMode flip_mode);
+
     void reset(SDL_Surface *new_surface = nullptr) noexcept { ptr_.reset(new_surface); }
 
     SDL_Surface *release() noexcept { return ptr_.release(); }

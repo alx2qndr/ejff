@@ -119,6 +119,7 @@ Application::Application()
 
     auto image_surface = Surface::load_image("../assets/textures/003_basecolor_0.png");
     image_surface.convert(SDL_PIXELFORMAT_ABGR8888);
+    image_surface.flip(SDL_FLIP_VERTICAL);
 
     texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
                             SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,

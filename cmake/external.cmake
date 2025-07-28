@@ -15,6 +15,10 @@ add_library(external::external ALIAS external)
 
 set(SDLIMAGE_VENDORED OFF CACHE BOOL "Disable vendored dependencies in SDL_image")
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+    find_package(Vulkan REQUIRED)
+endif()
+
 CPMAddPackage("gh:libsdl-org/SDL#release-3.2.16")
 CPMAddPackage("gh:libsdl-org/SDL_image#release-3.2.0")
 CPMAddPackage("gh:g-truc/glm#1.0.1")

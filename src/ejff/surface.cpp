@@ -35,6 +35,15 @@ Surface Surface::load_image(const std::filesystem::path &path)
     return Surface(surface);
 }
 
+void Surface::flip(SDL_FlipMode flip_mode)
+{
+    if (!SDL_FlipSurface(ptr_.get(), flip_mode))
+    {
+        throw std::runtime_error(fmt::format(
+            "Couldn't flip SDL_Surface. SDL_FlipSurface failed: {}", SDL_GetError()));
+    }
+}
+
 void Surface::convert(SDL_PixelFormat format)
 {
     auto surface = SDL_ConvertSurface(ptr_.get(), format);
