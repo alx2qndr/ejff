@@ -5,7 +5,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 GraphicsPipeline::GraphicsPipeline(Device &device, Shader &vertex_shader, Shader &fragment_shader,
@@ -77,4 +77,4 @@ void GraphicsPipeline::bind(RenderPass &render_pass)
     SDL_BindGPUGraphicsPipeline(render_pass.get(), ptr_.get());
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

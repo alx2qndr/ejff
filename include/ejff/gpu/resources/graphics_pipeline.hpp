@@ -9,7 +9,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUGraphicsPipelineDeleter
@@ -70,4 +70,4 @@ private:
     std::unique_ptr<SDL_GPUGraphicsPipeline, SDL_GPUGraphicsPipelineDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

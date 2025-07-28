@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUCopyPassDeleter
@@ -55,4 +55,4 @@ private:
     std::unique_ptr<SDL_GPUCopyPass, SDL_GPUCopyPassDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

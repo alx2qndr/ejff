@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUCommandBufferDeleter
@@ -52,4 +52,4 @@ private:
     std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

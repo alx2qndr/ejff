@@ -15,7 +15,7 @@
 namespace ejff
 {
 
-std::vector<gpu::resources::Vertex> vertices = {
+std::vector<gpu::Vertex> vertices = {
     {
         {0.5f, -0.5f, 0.0f},
         {1.0f, 0.0f, 0.0f, 1.0f},
@@ -60,31 +60,28 @@ Application::Application()
                                              SDL_GetError()));
     }
 
-    auto vertex_shader =
-        gpu::resources::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
-    auto fragment_shader =
-        gpu::resources::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
+    auto vertex_shader = gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
+    auto fragment_shader = gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
-    graphics_pipeline_ = ejff::gpu::resources::GraphicsPipeline::create_default_pipeline(
+    graphics_pipeline_ = ejff::gpu::GraphicsPipeline::create_default_pipeline(
         device_, vertex_shader, fragment_shader, window_);
 
-    vertex_buffer_ = gpu::resources::Buffer(device_, SDL_GPU_BUFFERUSAGE_VERTEX,
-                                            sizeof(gpu::resources::Vertex) * vertices.size());
+    vertex_buffer_ =
+        gpu::Buffer(device_, SDL_GPU_BUFFERUSAGE_VERTEX, sizeof(gpu::Vertex) * vertices.size());
 
     index_buffer_ =
-        gpu::resources::Buffer(device_, SDL_GPU_BUFFERUSAGE_INDEX, sizeof(Uint32) * indices.size());
+        gpu::Buffer(device_, SDL_GPU_BUFFERUSAGE_INDEX, sizeof(Uint32) * indices.size());
 
-    gpu::resources::TransferBuffer transfer_buffer(
-        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-        sizeof(gpu::resources::Vertex) * vertices.size() + sizeof(Uint32) * indices.size());
+    gpu::TransferBuffer transfer_buffer(device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+                                        sizeof(gpu::Vertex) * vertices.size() +
+                                            sizeof(Uint32) * indices.size());
 
-    transfer_buffer.upload(device_, vertices.data(),
-                           sizeof(gpu::resources::Vertex) * vertices.size(), 0);
+    transfer_buffer.upload(device_, vertices.data(), sizeof(gpu::Vertex) * vertices.size(), 0);
     transfer_buffer.upload(device_, indices.data(), sizeof(uint32_t) * indices.size(),
-                           sizeof(gpu::resources::Vertex) * vertices.size());
+                           sizeof(gpu::Vertex) * vertices.size());
 
-    gpu::resources::CommandBuffer command_buffer(device_);
-    gpu::resources::CopyPass copy_pass(command_buffer);
+    gpu::CommandBuffer command_buffer(device_);
+    gpu::CopyPass copy_pass(command_buffer);
 
     SDL_GPUTransferBufferLocation vertex_transfer_buffer_source{};
     vertex_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
@@ -93,13 +90,13 @@ Application::Application()
     SDL_GPUBufferRegion vertex_buffer_destination{};
     vertex_buffer_destination.buffer = vertex_buffer_.get();
     vertex_buffer_destination.offset = 0;
-    vertex_buffer_destination.size = sizeof(gpu::resources::Vertex) * vertices.size();
+    vertex_buffer_destination.size = sizeof(gpu::Vertex) * vertices.size();
 
     copy_pass.upload_to_buffer(vertex_transfer_buffer_source, vertex_buffer_destination, false);
 
     SDL_GPUTransferBufferLocation index_transfer_buffer_source{};
     index_transfer_buffer_source.transfer_buffer = transfer_buffer.get();
-    index_transfer_buffer_source.offset = sizeof(gpu::resources::Vertex) * vertices.size();
+    index_transfer_buffer_source.offset = sizeof(gpu::Vertex) * vertices.size();
 
     SDL_GPUBufferRegion index_buffer_destination{};
     index_buffer_destination.buffer = index_buffer_.get();
@@ -108,23 +105,22 @@ Application::Application()
 
     copy_pass.upload_to_buffer(index_transfer_buffer_source, index_buffer_destination, false);
 
-    sampler_ = gpu::resources::Sampler(
+    sampler_ = gpu::Sampler(
         device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR, SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
         SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
         SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f, SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f,
         false, false);
 
     auto image_surface = Surface::load_image("../assets/textures/003_basecolor_0.png");
-    image_surface.convert(SDL_PIXELFORMAT_RGBA8888);
+    image_surface.convert(SDL_PIXELFORMAT_ABGR8888);
 
-    texture_ = gpu::resources::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
-                                       SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
-                                       SDL_GPU_TEXTUREUSAGE_SAMPLER, image_surface.get()->w,
-                                       image_surface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
+    texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+                            SDL_GPU_TEXTUREUSAGE_SAMPLER, image_surface.get()->w,
+                            image_surface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
 
-    gpu::resources::TransferBuffer texture_transfer_buffer(
-        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-        image_surface.get()->h * image_surface.get()->pitch);
+    gpu::TransferBuffer texture_transfer_buffer(device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+                                                image_surface.get()->h *
+                                                    image_surface.get()->pitch);
 
     texture_transfer_buffer.upload(device_, image_surface.get()->pixels,
                                    image_surface.get()->h * image_surface.get()->pitch);
@@ -155,7 +151,7 @@ Application::~Application()
 
 void Application::iterate()
 {
-    gpu::resources::CommandBuffer command_buffer(device_);
+    gpu::CommandBuffer command_buffer(device_);
 
     SDL_GPUTexture *swapchain_texture;
     if (!SDL_WaitAndAcquireGPUSwapchainTexture(command_buffer.get(), window_.get(),
@@ -174,7 +170,7 @@ void Application::iterate()
         color_target_info.load_op = SDL_GPU_LOADOP_CLEAR;
         color_target_info.store_op = SDL_GPU_STOREOP_STORE;
 
-        gpu::resources::RenderPass render_pass(command_buffer, &color_target_info, 1, nullptr);
+        gpu::RenderPass render_pass(command_buffer, &color_target_info, 1, nullptr);
 
         graphics_pipeline_.bind(render_pass);
 

@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 Texture::Texture(Device &device, SDL_GPUTextureType type, SDL_GPUTextureFormat format,
@@ -33,4 +33,4 @@ Texture::Texture(Device &device, SDL_GPUTextureType type, SDL_GPUTextureFormat f
     ptr_.reset(texture);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

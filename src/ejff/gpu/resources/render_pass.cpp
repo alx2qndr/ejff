@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 RenderPass::RenderPass(CommandBuffer &command_buffer,
@@ -23,4 +23,4 @@ RenderPass::RenderPass(CommandBuffer &command_buffer,
     ptr_.reset(render_pass);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

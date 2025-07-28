@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUSamplerDeleter
@@ -57,4 +57,4 @@ private:
     std::unique_ptr<SDL_GPUSampler, SDL_GPUSamplerDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

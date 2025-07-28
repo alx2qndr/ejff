@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUTransferBufferDeleter
@@ -58,4 +58,4 @@ private:
     std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

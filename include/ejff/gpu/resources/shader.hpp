@@ -7,7 +7,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUShaderDeleter
@@ -56,4 +56,4 @@ private:
     std::unique_ptr<SDL_GPUShader, SDL_GPUShaderDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

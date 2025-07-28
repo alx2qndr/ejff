@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 CommandBuffer::CommandBuffer(Device &device) : ptr_(nullptr, SDL_GPUCommandBufferDeleter{})
@@ -20,4 +20,4 @@ CommandBuffer::CommandBuffer(Device &device) : ptr_(nullptr, SDL_GPUCommandBuffe
     ptr_.reset(command_buffer);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

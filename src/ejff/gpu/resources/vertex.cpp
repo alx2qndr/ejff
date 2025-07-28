@@ -1,6 +1,6 @@
 #include "ejff/gpu/resources/vertex.hpp"
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 SDL_GPUVertexBufferDescription Vertex::get_vertex_buffer_description()
@@ -39,4 +39,4 @@ std::array<SDL_GPUVertexAttribute, 4> Vertex::get_vertex_attributes()
     return vertex_attribute;
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

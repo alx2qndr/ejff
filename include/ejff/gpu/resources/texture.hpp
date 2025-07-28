@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPUTextureDeleter
@@ -55,4 +55,4 @@ private:
     std::unique_ptr<SDL_GPUTexture, SDL_GPUTextureDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

@@ -6,7 +6,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct SDL_GPURenderPassDeleter
@@ -54,4 +54,4 @@ private:
     std::unique_ptr<SDL_GPURenderPass, SDL_GPURenderPassDeleter> ptr_;
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

@@ -8,7 +8,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_samplers,
@@ -108,4 +108,4 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
     ptr_.reset(shader);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

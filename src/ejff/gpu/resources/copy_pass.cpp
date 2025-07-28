@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 CopyPass::CopyPass(CommandBuffer &command_buffer) : ptr_(nullptr, SDL_GPUCopyPassDeleter{})
@@ -31,4 +31,4 @@ void CopyPass::upload_to_texture(SDL_GPUTextureTransferInfo source,
     SDL_UploadToGPUTexture(ptr_.get(), &source, &destination, cycle);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 Buffer::Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size)
@@ -24,4 +24,4 @@ Buffer::Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size)
     ptr_.reset(buffer);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

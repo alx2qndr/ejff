@@ -31,11 +31,11 @@ public:
 private:
     Window window_;
     gpu::Device device_;
-    gpu::resources::GraphicsPipeline graphics_pipeline_;
-    gpu::resources::Buffer vertex_buffer_;
-    gpu::resources::Buffer index_buffer_;
-    gpu::resources::Texture texture_;
-    gpu::resources::Sampler sampler_;
+    gpu::GraphicsPipeline graphics_pipeline_;
+    gpu::Buffer vertex_buffer_;
+    gpu::Buffer index_buffer_;
+    gpu::Texture texture_;
+    gpu::Sampler sampler_;
 };
 
 } // namespace ejff

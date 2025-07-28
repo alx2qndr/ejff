@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 TransferBuffer::TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage, Uint32 size)
@@ -40,4 +40,4 @@ void TransferBuffer::upload(Device &device, const void *data, std::size_t size, 
     SDL_UnmapGPUTransferBuffer(device.get(), ptr_.get());
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

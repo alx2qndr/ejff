@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 Sampler::Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_filter,
@@ -40,4 +40,4 @@ Sampler::Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_fil
     ptr_.reset(sampler);
 }
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu

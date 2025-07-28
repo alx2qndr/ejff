@@ -8,7 +8,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-namespace ejff::gpu::resources
+namespace ejff::gpu
 {
 
 struct Vertex
@@ -22,4 +22,4 @@ struct Vertex
     static std::array<SDL_GPUVertexAttribute, 4> get_vertex_attributes();
 };
 
-} // namespace ejff::gpu::resources
+} // namespace ejff::gpu
