@@ -2,7 +2,6 @@
 #include "ejff/gpu/device.hpp"
 #include "ejff/gpu/resources/render_pass.hpp"
 #include "ejff/gpu/resources/shader.hpp"
-#include "ejff/gpu/resources/vertex.hpp"
 
 #include <stdexcept>
 

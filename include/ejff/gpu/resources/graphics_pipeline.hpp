@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ejff/window.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
