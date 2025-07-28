@@ -31,9 +31,9 @@ public:
 private:
     Window window_;
     gpu::Device device_;
-    gpu::GraphicsPipeline graphics_pipeline_;
-    gpu::Buffer vertex_buffer_;
-    gpu::Buffer index_buffer_;
+    gpu::GraphicsPipeline graphicsPipeline_;
+    gpu::Buffer vertexBuffer_;
+    gpu::Buffer indexBuffer_;
     gpu::Texture texture_;
     gpu::Sampler sampler_;
 };

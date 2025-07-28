@@ -1,4 +1,5 @@
 #include "ejff/gpu/resources/shader.hpp"
+#include "ejff/gpu/device.hpp"
 
 #include <fstream>
 #include <iostream>

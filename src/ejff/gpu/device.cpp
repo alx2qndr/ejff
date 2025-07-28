@@ -7,11 +7,11 @@
 namespace ejff::gpu
 {
 
-Device::Device(SDL_GPUShaderFormat format, bool debug_mode, const char *name)
+Device::Device(Shader::Format formatFlags, bool debug, const char *driver)
     : ptr_(nullptr, SDL_GPUDeviceDeleter{})
 {
-    auto device = SDL_CreateGPUDevice(format, debug_mode, name);
-    if (!debug_mode)
+    auto device = SDL_CreateGPUDevice(static_cast<Uint8>(formatFlags), debug, driver);
+    if (!device)
     {
         throw std::runtime_error(
             fmt::format("Couldn't create SDL_GPUDevice. SDL_CreateGPUDevice failed: {}",

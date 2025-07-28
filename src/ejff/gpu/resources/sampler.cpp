@@ -1,4 +1,5 @@
 #include "ejff/gpu/resources/sampler.hpp"
+#include "ejff/gpu/device.hpp"
 
 #include <stdexcept>
 
@@ -7,31 +8,43 @@
 namespace ejff::gpu
 {
 
-Sampler::Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_filter,
-                 SDL_GPUSamplerMipmapMode mipmap_mode,
-                 SDL_GPUSamplerAddressMode address_mode_u,
-                 SDL_GPUSamplerAddressMode address_mode_v,
-                 SDL_GPUSamplerAddressMode address_mode_w, float mip_lod_bias,
-                 float max_anisotropy, SDL_GPUCompareOp compare_op, float min_lod,
-                 float max_lod, bool enable_anisotropy, bool enable_compare)
-    : ptr_(nullptr, SDL_GPUSamplerDeleter{device.get()})
+Sampler::Sampler(Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
+                 SDL_GPUSamplerMipmapMode mipmapMode,
+                 SDL_GPUSamplerAddressMode addressModeU,
+                 SDL_GPUSamplerAddressMode addressModeV,
+                 SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
+                 float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
+                 float maxLod, bool enableAnisotropy, bool enableCompare)
+    : ptr_(create(device, minFilter, magFilter, mipmapMode, addressModeU, addressModeV,
+                  addressModeW, mipLodBias, maxAnisotropy, compareOp, minLod, maxLod,
+                  enableAnisotropy, enableCompare),
+           SDL_GPUSamplerDeleter{device.get()})
 {
-    SDL_GPUSamplerCreateInfo createinfo{};
-    createinfo.min_filter = min_filter;
-    createinfo.mag_filter = mag_filter;
-    createinfo.mipmap_mode = mipmap_mode;
-    createinfo.address_mode_u = address_mode_u;
-    createinfo.address_mode_v = address_mode_v;
-    createinfo.address_mode_w = address_mode_w;
-    createinfo.mip_lod_bias = mip_lod_bias;
-    createinfo.max_anisotropy = max_anisotropy;
-    createinfo.compare_op = compare_op;
-    createinfo.min_lod = min_lod;
-    createinfo.max_lod = max_lod;
-    createinfo.enable_anisotropy = enable_anisotropy;
-    createinfo.enable_compare = enable_compare;
+}
 
-    auto sampler = SDL_CreateGPUSampler(device.get(), &createinfo);
+SDL_GPUSampler *Sampler::create(
+    Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
+    SDL_GPUSamplerMipmapMode mipmapMode, SDL_GPUSamplerAddressMode addressModeU,
+    SDL_GPUSamplerAddressMode addressModeV, SDL_GPUSamplerAddressMode addressModeW,
+    float mipLodBias, float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
+    float maxLod, bool enableAnisotropy, bool enableCompare)
+{
+    SDL_GPUSamplerCreateInfo createInfo{};
+    createInfo.min_filter = minFilter;
+    createInfo.mag_filter = magFilter;
+    createInfo.mipmap_mode = mipmapMode;
+    createInfo.address_mode_u = addressModeU;
+    createInfo.address_mode_v = addressModeV;
+    createInfo.address_mode_w = addressModeW;
+    createInfo.mip_lod_bias = mipLodBias;
+    createInfo.max_anisotropy = maxAnisotropy;
+    createInfo.compare_op = compareOp;
+    createInfo.min_lod = minLod;
+    createInfo.max_lod = maxLod;
+    createInfo.enable_anisotropy = enableAnisotropy;
+    createInfo.enable_compare = enableCompare;
+
+    auto sampler = SDL_CreateGPUSampler(device.get(), &createInfo);
     if (!sampler)
     {
         throw std::runtime_error(fmt::format("Couldn't create SDL_GPUSampler. "
@@ -39,7 +52,7 @@ Sampler::Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_fil
                                              SDL_GetError()));
     }
 
-    ptr_.reset(sampler);
+    return sampler;
 }
 
 } // namespace ejff::gpu

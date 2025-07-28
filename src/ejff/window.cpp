@@ -7,10 +7,11 @@
 namespace ejff
 {
 
-Window::Window(std::string_view title, int width, int height, SDL_WindowFlags flags)
+Window::Window(std::string_view title, int width, int height, Flags flags)
     : ptr_(nullptr, SDL_WindowDeleter{})
 {
-    auto window = SDL_CreateWindow(title.data(), width, height, flags);
+    auto window = SDL_CreateWindow(title.data(), width, height,
+                                   static_cast<SDL_WindowFlags>(flags));
     if (!window)
     {
         throw std::runtime_error(fmt::format(

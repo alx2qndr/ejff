@@ -10,34 +10,18 @@ namespace ejff
 {
 
 Surface::Surface(int width, int height, SDL_PixelFormat format)
-    : ptr_(nullptr, SDL_SurfaceDeleter{})
+    : ptr_(create(width, height, format), SDL_SurfaceDeleter{})
 {
-    auto surface = SDL_CreateSurface(width, height, format);
-    if (!surface)
-    {
-        throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_Surface. SDL_CreateSurface failed: {}", SDL_GetError()));
-    }
-
-    ptr_.reset(surface);
 }
 
-Surface::Surface(SDL_Surface *surface) : ptr_(surface, SDL_SurfaceDeleter{}) {}
-
-Surface Surface::load_image(const std::filesystem::path &path)
+Surface::Surface(const std::filesystem::path &path)
+    : ptr_(loadSurfaceFromPath(path), SDL_SurfaceDeleter{})
 {
-    auto surface = IMG_Load(path.string().c_str());
-    if (!surface)
-    {
-        throw std::runtime_error(fmt::format(
-            "Couldn't load SDL_Surface from image. IMG_Load failed: {}", SDL_GetError()));
-    }
-    return Surface(surface);
 }
 
-void Surface::flip(SDL_FlipMode flip_mode)
+void Surface::flip(SDL_FlipMode flipMode)
 {
-    if (!SDL_FlipSurface(ptr_.get(), flip_mode))
+    if (!SDL_FlipSurface(ptr_.get(), flipMode))
     {
         throw std::runtime_error(fmt::format(
             "Couldn't flip SDL_Surface. SDL_FlipSurface failed: {}", SDL_GetError()));
@@ -55,6 +39,30 @@ void Surface::convert(SDL_PixelFormat format)
     }
 
     ptr_.reset(surface);
+}
+
+SDL_Surface *Surface::create(int width, int height, SDL_PixelFormat format)
+{
+    auto surface = SDL_CreateSurface(width, height, format);
+    if (!surface)
+    {
+        throw std::runtime_error(fmt::format(
+            "Couldn't create SDL_Surface. SDL_CreateSurface failed: {}", SDL_GetError()));
+    }
+
+    return surface;
+}
+
+SDL_Surface *Surface::loadSurfaceFromPath(const std::filesystem::path &path)
+{
+    auto surface = IMG_Load(path.string().c_str());
+    if (!surface)
+    {
+        throw std::runtime_error(fmt::format(
+            "Couldn't create SDL_Surface. SDL_CreateSurface failed: {}", SDL_GetError()));
+    }
+
+    return surface;
 }
 
 } // namespace ejff

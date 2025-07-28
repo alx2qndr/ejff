@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
 
 namespace ejff::gpu
 {
+
+class Device;
 
 struct SDL_GPUSamplerDeleter
 {
@@ -29,13 +29,13 @@ class Sampler
 public:
     Sampler() = default;
 
-    explicit Sampler(Device &device, SDL_GPUFilter min_filter, SDL_GPUFilter mag_filter,
-                     SDL_GPUSamplerMipmapMode mipmap_mode,
-                     SDL_GPUSamplerAddressMode address_mode_u,
-                     SDL_GPUSamplerAddressMode address_mode_v,
-                     SDL_GPUSamplerAddressMode address_mode_w, float mip_lod_bias,
-                     float max_anisotropy, SDL_GPUCompareOp compare_op, float min_lod,
-                     float max_lod, bool enable_anisotropy, bool enable_compare);
+    explicit Sampler(Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
+                     SDL_GPUSamplerMipmapMode mipmapMode,
+                     SDL_GPUSamplerAddressMode addressModeU,
+                     SDL_GPUSamplerAddressMode addressModeV,
+                     SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
+                     float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
+                     float maxLod, bool enableAnisotropy, bool enableCompare);
 
     Sampler(const Sampler &) = delete;
     Sampler &operator=(const Sampler &) = delete;
@@ -45,20 +45,18 @@ public:
 
     ~Sampler() = default;
 
-    void reset(SDL_GPUSampler *new_sampler = nullptr) noexcept
-    {
-        ptr_.reset(new_sampler);
-    }
-
-    SDL_GPUSampler *release() noexcept { return ptr_.release(); }
-
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
-    SDL_GPUSampler *get() noexcept { return ptr_.get(); }
     SDL_GPUSampler *get() const noexcept { return ptr_.get(); }
 
 private:
-    std::unique_ptr<SDL_GPUSampler, SDL_GPUSamplerDeleter> ptr_;
+    SDL_GPUSampler *create(Device &device, SDL_GPUFilter minFilter,
+                           SDL_GPUFilter magFilter, SDL_GPUSamplerMipmapMode mipmapMode,
+                           SDL_GPUSamplerAddressMode addressModeU,
+                           SDL_GPUSamplerAddressMode addressModeV,
+                           SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
+                           float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
+                           float maxLod, bool enableAnisotropy, bool enableCompare);
+
+    std::unique_ptr<SDL_GPUSampler, SDL_GPUSamplerDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

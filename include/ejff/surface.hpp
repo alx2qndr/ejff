@@ -25,7 +25,7 @@ public:
     Surface() = default;
 
     explicit Surface(int width, int height, SDL_PixelFormat format);
-    explicit Surface(SDL_Surface *surface);
+    explicit Surface(const std::filesystem::path &path);
 
     Surface(const Surface &) = delete;
     Surface &operator=(const Surface &) = delete;
@@ -35,23 +35,17 @@ public:
 
     ~Surface() = default;
 
-    static Surface load_image(const std::filesystem::path &path);
-
     void convert(SDL_PixelFormat format);
 
-    void flip(SDL_FlipMode flip_mode);
+    void flip(SDL_FlipMode flipMode);
 
-    void reset(SDL_Surface *new_surface = nullptr) noexcept { ptr_.reset(new_surface); }
-
-    SDL_Surface *release() noexcept { return ptr_.release(); }
-
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
-    SDL_Surface *get() noexcept { return ptr_.get(); }
     SDL_Surface *get() const noexcept { return ptr_.get(); }
 
 private:
-    std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> ptr_;
+    SDL_Surface *create(int width, int height, SDL_PixelFormat format);
+    SDL_Surface *loadSurfaceFromPath(const std::filesystem::path &path);
+
+    std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff

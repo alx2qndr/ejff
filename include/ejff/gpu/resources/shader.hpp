@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
+#include "ejff/utilities/enable_bit_mask_operators.hpp"
 
 #include <filesystem>
 #include <memory>
@@ -9,6 +9,8 @@
 
 namespace ejff::gpu
 {
+
+class Device;
 
 struct SDL_GPUShaderDeleter
 {
@@ -28,6 +30,17 @@ struct SDL_GPUShaderDeleter
 class Shader
 {
 public:
+    enum class Format : uint64_t
+    {
+        eInvalid = SDL_GPU_SHADERFORMAT_INVALID,
+        ePrivate = SDL_GPU_SHADERFORMAT_PRIVATE,
+        eSPIRV = SDL_GPU_SHADERFORMAT_SPIRV,
+        eDXBC = SDL_GPU_SHADERFORMAT_DXBC,
+        eDXIL = SDL_GPU_SHADERFORMAT_DXIL,
+        eMSL = SDL_GPU_SHADERFORMAT_MSL,
+        eMetalLib = SDL_GPU_SHADERFORMAT_METALLIB
+    };
+
     Shader() = default;
 
     explicit Shader(Device &device, const std::filesystem::path &path,
@@ -57,3 +70,5 @@ private:
 };
 
 } // namespace ejff::gpu
+
+ENABLE_BITMASK_OPERATORS(ejff::gpu::Shader::Format)

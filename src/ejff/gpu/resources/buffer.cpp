@@ -1,4 +1,5 @@
 #include "ejff/gpu/resources/buffer.hpp"
+#include "ejff/gpu/device.hpp"
 
 #include <stdexcept>
 
@@ -7,12 +8,16 @@
 namespace ejff::gpu
 {
 
-Buffer::Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size)
-    : ptr_(nullptr, SDL_GPUBufferDeleter{device.get()})
+Buffer::Buffer(Device &device, UsageFlags usage, uint32_t size)
+    : ptr_(create(device, usage, size), SDL_GPUBufferDeleter{device.get()})
+{
+}
+
+SDL_GPUBuffer *Buffer::create(Device &device, UsageFlags usage, uint32_t size)
 {
     SDL_GPUBufferCreateInfo createinfo{};
-    createinfo.usage = usage;
-    createinfo.size = size;
+    createinfo.usage = static_cast<SDL_GPUBufferUsageFlags>(usage);
+    createinfo.size = static_cast<Uint32>(size);
 
     auto buffer = SDL_CreateGPUBuffer(device.get(), &createinfo);
     if (!buffer)
@@ -22,7 +27,7 @@ Buffer::Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size)
                         SDL_GetError()));
     }
 
-    ptr_.reset(buffer);
+    return buffer;
 }
 
 } // namespace ejff::gpu

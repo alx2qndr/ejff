@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ejff/gpu/resources/shader.hpp"
+
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -21,9 +23,11 @@ struct SDL_GPUDeviceDeleter
 class Device
 {
 public:
+    std::unique_ptr<SDL_GPUDevice, SDL_GPUDeviceDeleter> ptr_;
+
     Device() = default;
 
-    explicit Device(SDL_GPUShaderFormat format, bool debug_mode, const char *name);
+    explicit Device(Shader::Format formatFlags, bool debug, const char *driver);
 
     Device(const Device &) = delete;
     Device &operator=(const Device &) = delete;
@@ -42,9 +46,6 @@ public:
     SDL_GPUDevice *get() const noexcept { return ptr_.get(); }
 
     explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
-private:
-    std::unique_ptr<SDL_GPUDevice, SDL_GPUDeviceDeleter> ptr_;
 };
 
 } // namespace ejff::gpu

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ejff/gpu/resources/command_buffer.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -9,13 +7,18 @@
 namespace ejff::gpu
 {
 
+class Buffer;
+class CommandBuffer;
+class Texture;
+class TransferBuffer;
+
 struct SDL_GPUCopyPassDeleter
 {
-    void operator()(SDL_GPUCopyPass *copy_pass) const noexcept
+    void operator()(SDL_GPUCopyPass *copyPass) const noexcept
     {
-        if (copy_pass)
+        if (copyPass)
         {
-            SDL_EndGPUCopyPass(copy_pass);
+            SDL_EndGPUCopyPass(copyPass);
         }
     }
 };
@@ -25,7 +28,7 @@ class CopyPass
 public:
     CopyPass() = default;
 
-    explicit CopyPass(CommandBuffer &command_buffer);
+    explicit CopyPass(CommandBuffer &commandBuffer);
 
     CopyPass(const CopyPass &) = delete;
     CopyPass &operator=(const CopyPass &) = delete;
@@ -35,27 +38,24 @@ public:
 
     ~CopyPass() = default;
 
-    void upload_to_buffer(SDL_GPUTransferBufferLocation source,
-                          SDL_GPUBufferRegion destination, bool cycle = false);
+    void uploadToBuffer(TransferBuffer &transferBuffer, uint32_t sourceOffset,
+                        Buffer &buffer, uint32_t destinationOffset, uint32_t size,
+                        bool cycle = false);
 
-    void upload_to_texture(SDL_GPUTextureTransferInfo source,
-                           SDL_GPUTextureRegion destination, bool cycle = false);
+    void uploadToTexture(TransferBuffer &transferBuffer, uint32_t offset,
+                         uint32_t pixels_per_row, uint32_t rows_per_layer,
+                         Texture &texture, uint32_t mipLevel, uint32_t layer, uint32_t x,
+                         uint32_t y, uint32_t z, uint32_t width, uint32_t height,
+                         uint32_t depth, bool cycle = false);
 
-    void reset(SDL_GPUCopyPass *new_copy_pass = nullptr) noexcept
-    {
-        ptr_.reset(new_copy_pass);
-    }
-
-    SDL_GPUCopyPass *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUCopyPass *get() noexcept { return ptr_.get(); }
+    void end();
 
     SDL_GPUCopyPass *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
 private:
-    std::unique_ptr<SDL_GPUCopyPass, SDL_GPUCopyPassDeleter> ptr_;
+    SDL_GPUCopyPass *create(CommandBuffer &commandBuffer);
+
+    std::unique_ptr<SDL_GPUCopyPass, SDL_GPUCopyPassDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

@@ -18,8 +18,8 @@ struct Vertex
     glm::vec2 uv{0.0f};
     glm::vec3 normal{0.0f};
 
-    static SDL_GPUVertexBufferDescription get_vertex_buffer_description();
-    static std::array<SDL_GPUVertexAttribute, 4> get_vertex_attributes();
+    static SDL_GPUVertexBufferDescription getVertexBufferDescription();
+    static std::array<SDL_GPUVertexAttribute, 4> getVertexAttributes();
 };
 
 } // namespace ejff::gpu

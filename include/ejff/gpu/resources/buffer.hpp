@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
+#include "ejff/utilities/enable_bit_mask_operators.hpp"
 
 #include <memory>
 
@@ -8,6 +8,8 @@
 
 namespace ejff::gpu
 {
+
+class Device;
 
 struct SDL_GPUBufferDeleter
 {
@@ -27,9 +29,18 @@ struct SDL_GPUBufferDeleter
 class Buffer
 {
 public:
-    Buffer() = default;
+    enum class UsageFlags : uint64_t
+    {
+        eVertex = SDL_GPU_BUFFERUSAGE_VERTEX,
+        eIndex = SDL_GPU_BUFFERUSAGE_INDEX,
+        eIndirect = SDL_GPU_BUFFERUSAGE_INDIRECT,
+        eGraphicsStorageRead = SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ,
+        eComputeStorageRead = SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ,
+        eComputeStorageWrite = SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE
+    };
 
-    explicit Buffer(Device &device, SDL_GPUBufferUsageFlags usage, Uint32 size);
+    Buffer() = default;
+    explicit Buffer(Device &device, UsageFlags usage, uint32_t size);
 
     Buffer(const Buffer &) = delete;
     Buffer &operator=(const Buffer &) = delete;
@@ -39,18 +50,14 @@ public:
 
     ~Buffer() = default;
 
-    void reset(SDL_GPUBuffer *new_buffer = nullptr) noexcept { ptr_.reset(new_buffer); }
-
-    SDL_GPUBuffer *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUBuffer *get() noexcept { return ptr_.get(); }
-
     SDL_GPUBuffer *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
 private:
-    std::unique_ptr<SDL_GPUBuffer, SDL_GPUBufferDeleter> ptr_;
+    SDL_GPUBuffer *create(Device &device, UsageFlags usage, uint32_t size);
+
+    std::unique_ptr<SDL_GPUBuffer, SDL_GPUBufferDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu
+
+ENABLE_BITMASK_OPERATORS(ejff::gpu::Buffer::UsageFlags)

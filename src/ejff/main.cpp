@@ -30,7 +30,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
     catch (const std::exception &e)
     {
         std::cerr << fmt::format(
-            "Couldn't initialize application. Thrown exception: {}\n", e.what());
+            "Couldn't initialize application. SDL_AppInit failed: {}\n", e.what());
         return SDL_APP_FAILURE;
     }
 
@@ -51,8 +51,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     }
     catch (const std::exception &e)
     {
-        std::cerr << fmt::format("Couldn't iterate application. Thrown exception: {}\n",
-                                 e.what());
+        std::cerr << fmt::format(
+            "Couldn't iterate application. SDL_AppIterate failed: {}\n", e.what());
         return SDL_APP_FAILURE;
     }
 
@@ -76,8 +76,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
         }
         catch (const std::exception &e)
         {
-            std::cerr << fmt::format("Couldn't quit application. Thrown exception: {}\n",
-                                     e.what());
+            std::cerr << fmt::format(
+                "Couldn't quit application. SDL_AppQuit failed: {}\n", e.what());
         }
     }
 

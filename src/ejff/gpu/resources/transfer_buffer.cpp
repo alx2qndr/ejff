@@ -1,4 +1,5 @@
 #include "ejff/gpu/resources/transfer_buffer.hpp"
+#include "ejff/gpu/device.hpp"
 
 #include <stdexcept>
 
@@ -9,21 +10,8 @@ namespace ejff::gpu
 
 TransferBuffer::TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage,
                                Uint32 size)
-    : ptr_(nullptr, SDL_GPUTransferBufferDeleter{device.get()})
+    : ptr_(create(device, usage, size), SDL_GPUTransferBufferDeleter{device.get()})
 {
-    SDL_GPUTransferBufferCreateInfo createinfo{};
-    createinfo.usage = usage;
-    createinfo.size = size;
-
-    auto buffer = SDL_CreateGPUTransferBuffer(device.get(), &createinfo);
-    if (!buffer)
-    {
-        throw std::runtime_error(fmt::format("Couldn't create SDL_GPUTransferBuffer. "
-                                             "SDL_CreateGPUTransferBuffer failed: {}",
-                                             SDL_GetError()));
-    }
-
-    ptr_.reset(buffer);
 }
 
 void TransferBuffer::upload(Device &device, const void *data, std::size_t size,
@@ -40,6 +28,25 @@ void TransferBuffer::upload(Device &device, const void *data, std::size_t size,
     std::memcpy(static_cast<std::uint8_t *>(mapped) + offset, data, size);
 
     SDL_UnmapGPUTransferBuffer(device.get(), ptr_.get());
+}
+
+SDL_GPUTransferBuffer *TransferBuffer::create(Device &device,
+                                              SDL_GPUTransferBufferUsage usage,
+                                              uint32_t size)
+{
+    SDL_GPUTransferBufferCreateInfo createInfo{};
+    createInfo.usage = usage;
+    createInfo.size = static_cast<Uint32>(size);
+
+    auto transferBuffer = SDL_CreateGPUTransferBuffer(device.get(), &createInfo);
+    if (!transferBuffer)
+    {
+        throw std::runtime_error(fmt::format("Couldn't create SDL_GPUTransferBuffer. "
+                                             "SDL_CreateGPUTransferBuffer failed: {}",
+                                             SDL_GetError()));
+    }
+
+    return transferBuffer;
 }
 
 } // namespace ejff::gpu

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ejff/utilities/enable_bit_mask_operators.hpp"
+
 #include <memory>
 #include <string_view>
 
@@ -19,12 +21,43 @@ struct SDL_WindowDeleter
     }
 };
 
+#include <cstdint>
+
 class Window
 {
 public:
+    enum class Flags : uint64_t
+    {
+        eFullscreen = SDL_WINDOW_FULLSCREEN,
+        eOpengl = SDL_WINDOW_OPENGL,
+        eOccluded = SDL_WINDOW_OCCLUDED,
+        eHidden = SDL_WINDOW_HIDDEN,
+        eBorderless = SDL_WINDOW_BORDERLESS,
+        eResizable = SDL_WINDOW_RESIZABLE,
+        eMinimized = SDL_WINDOW_MINIMIZED,
+        eMaximized = SDL_WINDOW_MAXIMIZED,
+        eMousegrabbed = SDL_WINDOW_MOUSE_GRABBED,
+        eInputfocus = SDL_WINDOW_INPUT_FOCUS,
+        eMousefocus = SDL_WINDOW_MOUSE_FOCUS,
+        eExternal = SDL_WINDOW_EXTERNAL,
+        eModal = SDL_WINDOW_MODAL,
+        eHighPixelDensity = SDL_WINDOW_HIGH_PIXEL_DENSITY,
+        eMousecapture = SDL_WINDOW_MOUSE_CAPTURE,
+        eMouserelativemode = SDL_WINDOW_MOUSE_RELATIVE_MODE,
+        eAlwaysontop = SDL_WINDOW_ALWAYS_ON_TOP,
+        eUtility = SDL_WINDOW_UTILITY,
+        eTooltip = SDL_WINDOW_TOOLTIP,
+        ePopupmenu = SDL_WINDOW_POPUP_MENU,
+        eKeyboardgrabbed = SDL_WINDOW_KEYBOARD_GRABBED,
+        eVulkan = SDL_WINDOW_VULKAN,
+        eMetal = SDL_WINDOW_METAL,
+        eTransparent = SDL_WINDOW_TRANSPARENT,
+        eNotfocusable = SDL_WINDOW_NOT_FOCUSABLE
+    };
+
     Window() = default;
 
-    explicit Window(std::string_view title, int width, int height, SDL_WindowFlags flags);
+    explicit Window(std::string_view title, int width, int height, Flags flags);
 
     Window(const Window &) = delete;
     Window &operator=(const Window &) = delete;
@@ -48,3 +81,5 @@ private:
 };
 
 } // namespace ejff
+
+ENABLE_BITMASK_OPERATORS(ejff::Window::Flags)

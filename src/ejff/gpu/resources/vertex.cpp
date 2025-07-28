@@ -3,40 +3,40 @@
 namespace ejff::gpu
 {
 
-SDL_GPUVertexBufferDescription Vertex::get_vertex_buffer_description()
+SDL_GPUVertexBufferDescription Vertex::getVertexBufferDescription()
 {
-    SDL_GPUVertexBufferDescription vertex_buffer_description{};
-    vertex_buffer_description.slot = 0;
-    vertex_buffer_description.pitch = sizeof(Vertex);
-    vertex_buffer_description.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
-    return vertex_buffer_description;
+    SDL_GPUVertexBufferDescription vertexBufferDescription{};
+    vertexBufferDescription.slot = 0;
+    vertexBufferDescription.pitch = sizeof(Vertex);
+    vertexBufferDescription.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX;
+    return vertexBufferDescription;
 }
 
-std::array<SDL_GPUVertexAttribute, 4> Vertex::get_vertex_attributes()
+std::array<SDL_GPUVertexAttribute, 4> Vertex::getVertexAttributes()
 {
-    std::array<SDL_GPUVertexAttribute, 4> vertex_attribute{};
+    std::array<SDL_GPUVertexAttribute, 4> vertexAttribute{};
 
-    vertex_attribute[0].location = 0;
-    vertex_attribute[0].buffer_slot = 0;
-    vertex_attribute[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-    vertex_attribute[0].offset = offsetof(Vertex, position);
+    vertexAttribute[0].location = 0;
+    vertexAttribute[0].buffer_slot = 0;
+    vertexAttribute[0].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+    vertexAttribute[0].offset = offsetof(Vertex, position);
 
-    vertex_attribute[1].location = 1;
-    vertex_attribute[1].buffer_slot = 0;
-    vertex_attribute[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
-    vertex_attribute[1].offset = offsetof(Vertex, color);
+    vertexAttribute[1].location = 1;
+    vertexAttribute[1].buffer_slot = 0;
+    vertexAttribute[1].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
+    vertexAttribute[1].offset = offsetof(Vertex, color);
 
-    vertex_attribute[2].location = 2;
-    vertex_attribute[2].buffer_slot = 0;
-    vertex_attribute[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-    vertex_attribute[2].offset = offsetof(Vertex, uv);
+    vertexAttribute[2].location = 2;
+    vertexAttribute[2].buffer_slot = 0;
+    vertexAttribute[2].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
+    vertexAttribute[2].offset = offsetof(Vertex, uv);
 
-    vertex_attribute[3].location = 3;
-    vertex_attribute[3].buffer_slot = 0;
-    vertex_attribute[3].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-    vertex_attribute[3].offset = offsetof(Vertex, normal);
+    vertexAttribute[3].location = 3;
+    vertexAttribute[3].buffer_slot = 0;
+    vertexAttribute[3].format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+    vertexAttribute[3].offset = offsetof(Vertex, normal);
 
-    return vertex_attribute;
+    return vertexAttribute;
 }
 
 } // namespace ejff::gpu

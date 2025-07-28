@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
 
 namespace ejff::gpu
 {
+
+class Device;
 
 struct SDL_GPUTextureDeleter
 {
@@ -30,9 +30,9 @@ public:
     Texture() = default;
 
     explicit Texture(Device &device, SDL_GPUTextureType type, SDL_GPUTextureFormat format,
-                     SDL_GPUTextureUsageFlags usage, Uint32 width, Uint32 height,
-                     Uint32 layer_count_or_depth, Uint32 num_levels,
-                     SDL_GPUSampleCount sample_count);
+                     SDL_GPUTextureUsageFlags usage, uint32_t width, uint32_t height,
+                     uint32_t layerCountOrDepth, uint32_t numLevels,
+                     SDL_GPUSampleCount sampleCount);
 
     Texture(const Texture &) = delete;
     Texture &operator=(const Texture &) = delete;
@@ -42,20 +42,15 @@ public:
 
     ~Texture() = default;
 
-    void reset(SDL_GPUTexture *new_texture = nullptr) noexcept
-    {
-        ptr_.reset(new_texture);
-    }
-
-    SDL_GPUTexture *release() noexcept { return ptr_.release(); }
-
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
-    SDL_GPUTexture *get() noexcept { return ptr_.get(); }
     SDL_GPUTexture *get() const noexcept { return ptr_.get(); }
 
 private:
-    std::unique_ptr<SDL_GPUTexture, SDL_GPUTextureDeleter> ptr_;
+    SDL_GPUTexture *create(Device &device, SDL_GPUTextureType type,
+                           SDL_GPUTextureFormat format, SDL_GPUTextureUsageFlags usage,
+                           uint32_t width, uint32_t height, uint32_t layerCountOrDepth,
+                           uint32_t numLevels, SDL_GPUSampleCount sampleCount);
+
+    std::unique_ptr<SDL_GPUTexture, SDL_GPUTextureDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

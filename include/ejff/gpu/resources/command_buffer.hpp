@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -9,17 +7,18 @@
 namespace ejff::gpu
 {
 
+class Device;
+
 struct SDL_GPUCommandBufferDeleter
 {
-    void operator()(SDL_GPUCommandBuffer *command_buffer) const noexcept
+    void operator()(SDL_GPUCommandBuffer *commandBuffer) const noexcept
     {
-        if (command_buffer)
+        if (commandBuffer)
         {
-            SDL_SubmitGPUCommandBuffer(command_buffer);
+            SDL_SubmitGPUCommandBuffer(commandBuffer);
         }
     }
 };
-
 class CommandBuffer
 {
 public:
@@ -35,21 +34,14 @@ public:
 
     ~CommandBuffer() = default;
 
-    void reset(SDL_GPUCommandBuffer *new_command_buffer = nullptr) noexcept
-    {
-        ptr_.reset(new_command_buffer);
-    }
-
-    SDL_GPUCommandBuffer *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUCommandBuffer *get() noexcept { return ptr_.get(); }
+    void submit();
 
     SDL_GPUCommandBuffer *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
 private:
-    std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_;
+    SDL_GPUCommandBuffer *create(Device &device);
+
+    std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

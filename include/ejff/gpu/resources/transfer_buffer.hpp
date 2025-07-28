@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ejff/gpu/device.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -24,13 +22,15 @@ struct SDL_GPUTransferBufferDeleter
     }
 };
 
+class Device;
+
 class TransferBuffer
 {
 public:
     TransferBuffer() = default;
 
     explicit TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage,
-                            Uint32 size);
+                            uint32_t size);
 
     TransferBuffer(const TransferBuffer &) = delete;
     TransferBuffer &operator=(const TransferBuffer &) = delete;
@@ -43,21 +43,13 @@ public:
     void upload(Device &device, const void *data, std::size_t size,
                 std::size_t offset = 0);
 
-    void reset(SDL_GPUTransferBuffer *new_transfer_buffer = nullptr) noexcept
-    {
-        ptr_.reset(new_transfer_buffer);
-    }
-
-    SDL_GPUTransferBuffer *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUTransferBuffer *get() noexcept { return ptr_.get(); }
-
     SDL_GPUTransferBuffer *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
 private:
-    std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_;
+    SDL_GPUTransferBuffer *create(Device &device, SDL_GPUTransferBufferUsage usage,
+                                  uint32_t size);
+
+    std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

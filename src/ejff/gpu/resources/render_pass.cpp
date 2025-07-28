@@ -1,4 +1,5 @@
 #include "ejff/gpu/resources/render_pass.hpp"
+#include "ejff/gpu/resources/command_buffer.hpp"
 
 #include <stdexcept>
 
@@ -7,23 +8,30 @@
 namespace ejff::gpu
 {
 
-RenderPass::RenderPass(CommandBuffer &command_buffer,
-                       const SDL_GPUColorTargetInfo *color_target_infos,
-                       Uint32 num_color_targets,
-                       const SDL_GPUDepthStencilTargetInfo *depth_stencil_target_info)
-    : ptr_(nullptr, SDL_GPURenderPassDeleter{})
+RenderPass::RenderPass(CommandBuffer &commandBuffer,
+                       const SDL_GPUColorTargetInfo *colorTargetInfos,
+                       uint32_t numColorTargets,
+                       const SDL_GPUDepthStencilTargetInfo *depthStencilTargetInfo)
+    : ptr_(create(commandBuffer, colorTargetInfos, numColorTargets,
+                  depthStencilTargetInfo),
+           SDL_GPURenderPassDeleter{})
 {
-    auto render_pass =
-        SDL_BeginGPURenderPass(command_buffer.get(), color_target_infos,
-                               num_color_targets, depth_stencil_target_info);
-    if (!render_pass)
+}
+
+SDL_GPURenderPass *RenderPass::create(
+    CommandBuffer &commandBuffer, const SDL_GPUColorTargetInfo *colorTargetInfos,
+    uint32_t numColorTargets, const SDL_GPUDepthStencilTargetInfo *depthStencilTargetInfo)
+{
+    auto renderPass = SDL_BeginGPURenderPass(commandBuffer.get(), colorTargetInfos,
+                                             numColorTargets, depthStencilTargetInfo);
+    if (!renderPass)
     {
         throw std::runtime_error(fmt::format(
             "Couldn't begin SDL_GPURenderPass. SDL_BeginGPURenderPass failed: {}",
             SDL_GetError()));
     }
 
-    ptr_.reset(render_pass);
+    return renderPass;
 }
 
 } // namespace ejff::gpu
