@@ -44,7 +44,7 @@ std::vector<gpu::Vertex> vertices = {
 
 std::vector<Uint32> indices = {0, 1, 2, 2, 1, 3};
 
-Application::Application()
+void Application::init()
 {
     window_ = Window("Hello, Engine Just For Fun (EJFF for short)!", 1280, 720,
                      Window::Flags::eResizable | Window::Flags::eHighPixelDensity);

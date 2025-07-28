@@ -25,12 +25,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
         }
 
         auto *state = new AppState();
+        state->app.init();
         *appstate = state;
     }
     catch (const std::exception &e)
     {
         std::cerr << fmt::format(
             "Couldn't initialize application. SDL_AppInit failed: {}\n", e.what());
+
         return SDL_APP_FAILURE;
     }
 
