@@ -39,7 +39,7 @@ public:
     SDL_GPUCommandBuffer *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUCommandBuffer *create(Device &device);
+    SDL_GPUCommandBuffer *acquire(Device &device);
 
     std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_{nullptr};
 };

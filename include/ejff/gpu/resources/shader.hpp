@@ -44,8 +44,8 @@ public:
     Shader() = default;
 
     explicit Shader(Device &device, const std::filesystem::path &path,
-                    Uint32 num_samplers = 0, Uint32 num_storage_textures = 0,
-                    Uint32 num_storage_buffers = 0, Uint32 num_uniform_buffers = 0);
+                    uint32_t numSamplers = 0, uint32_t numStorageTextures = 0,
+                    uint32_t numStorageBuffers = 0, uint32_t numUniformBuffers = 0);
 
     Shader(const Shader &) = delete;
     Shader &operator=(const Shader &) = delete;
@@ -55,18 +55,14 @@ public:
 
     ~Shader() = default;
 
-    void reset(SDL_GPUShader *new_shader = nullptr) noexcept { ptr_.reset(new_shader); }
-
-    SDL_GPUShader *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUShader *get() noexcept { return ptr_.get(); }
-
     SDL_GPUShader *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
 private:
-    std::unique_ptr<SDL_GPUShader, SDL_GPUShaderDeleter> ptr_;
+    SDL_GPUShader *create(Device &device, const std::filesystem::path &path,
+                          uint32_t numSamplers, uint32_t numStorageTextures,
+                          uint32_t numStorageBuffers, uint32_t numUniformBuffers);
+
+    std::unique_ptr<SDL_GPUShader, SDL_GPUShaderDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

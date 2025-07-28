@@ -12,10 +12,18 @@
 namespace ejff::gpu
 {
 
-Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_samplers,
-               Uint32 num_storage_textures, Uint32 num_storage_buffers,
-               Uint32 num_uniform_buffers)
-    : ptr_(nullptr, SDL_GPUShaderDeleter{device.get()})
+Shader::Shader(Device &device, const std::filesystem::path &path, uint32_t numSamplers,
+               uint32_t numStorageTextures, uint32_t numStorageBuffers,
+               uint32_t numUniformBuffers)
+    : ptr_(create(device, path, numSamplers, numStorageTextures, numStorageBuffers,
+                  numUniformBuffers),
+           SDL_GPUShaderDeleter{device.get()})
+{
+}
+
+SDL_GPUShader *Shader::create(Device &device, const std::filesystem::path &path,
+                              uint32_t numSamplers, uint32_t numStorageTextures,
+                              uint32_t numStorageBuffers, uint32_t numUniformBuffers)
 {
     auto const extension = path.extension().string();
 
@@ -34,31 +42,31 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
             fmt::format("Invalid shader extension '{}'.", extension));
     }
 
-    SDL_GPUShaderFormat backend_formats = SDL_GetGPUShaderFormats(device.get());
+    SDL_GPUShaderFormat backendFormats = SDL_GetGPUShaderFormats(device.get());
     SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_INVALID;
-    std::string format_folder;
-    std::string format_ext;
+    std::string formatFolder;
+    std::string formatExt;
     std::string entrypoint;
 
-    if (backend_formats & SDL_GPU_SHADERFORMAT_SPIRV)
+    if (backendFormats & SDL_GPU_SHADERFORMAT_SPIRV)
     {
         format = SDL_GPU_SHADERFORMAT_SPIRV;
-        format_folder = "spv";
-        format_ext = "spv";
+        formatFolder = "spv";
+        formatExt = "spv";
         entrypoint = "main";
     }
-    else if (backend_formats & SDL_GPU_SHADERFORMAT_MSL)
+    else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL)
     {
         format = SDL_GPU_SHADERFORMAT_MSL;
-        format_folder = "msl";
-        format_ext = "metal";
+        formatFolder = "msl";
+        formatExt = "metal";
         entrypoint = "main0";
     }
-    else if (backend_formats & SDL_GPU_SHADERFORMAT_DXIL)
+    else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL)
     {
         format = SDL_GPU_SHADERFORMAT_DXIL;
-        format_folder = "dxil";
-        format_ext = "dxil";
+        formatFolder = "dxil";
+        formatExt = "dxil";
         entrypoint = "main";
     }
     else
@@ -68,9 +76,9 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
 
     auto filename = path.filename();
     std::filesystem::path binary_path =
-        path.parent_path().parent_path() / "bin" / format_folder;
+        path.parent_path().parent_path() / "bin" / formatFolder;
     binary_path /= filename;
-    binary_path += "." + format_ext;
+    binary_path += "." + formatExt;
 
     binary_path = std::filesystem::absolute(binary_path).lexically_normal();
 
@@ -90,19 +98,18 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
             fmt::format("Couldn't read shader binary '{}'", binary_path.string()));
     }
 
-    SDL_GPUShaderCreateInfo createinfo{};
-    createinfo.code_size = buffer.size();
-    createinfo.code = reinterpret_cast<Uint8 *>(buffer.data());
-    createinfo.entrypoint = entrypoint.c_str();
-    createinfo.format = format;
-    createinfo.stage = stage;
-    createinfo.num_samplers = num_samplers;
-    createinfo.num_storage_textures = num_storage_textures;
-    createinfo.num_storage_buffers = num_storage_buffers;
-    createinfo.num_uniform_buffers = num_uniform_buffers;
-    createinfo.props = {};
+    SDL_GPUShaderCreateInfo createInfo{};
+    createInfo.code_size = static_cast<size_t>(buffer.size());
+    createInfo.code = reinterpret_cast<Uint8 *>(buffer.data());
+    createInfo.entrypoint = entrypoint.c_str();
+    createInfo.format = format;
+    createInfo.stage = stage;
+    createInfo.num_samplers = static_cast<Uint32>(numSamplers);
+    createInfo.num_storage_textures = static_cast<Uint32>(numStorageTextures);
+    createInfo.num_storage_buffers = static_cast<Uint32>(numStorageBuffers);
+    createInfo.num_uniform_buffers = static_cast<Uint32>(numUniformBuffers);
 
-    auto shader = SDL_CreateGPUShader(device.get(), &createinfo);
+    auto shader = SDL_CreateGPUShader(device.get(), &createInfo);
     if (!shader)
     {
         throw std::runtime_error(
@@ -110,7 +117,7 @@ Shader::Shader(Device &device, const std::filesystem::path &path, Uint32 num_sam
                         SDL_GetError()));
     }
 
-    ptr_.reset(shader);
+    return shader;
 }
 
 } // namespace ejff::gpu

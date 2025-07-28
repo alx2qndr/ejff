@@ -9,7 +9,7 @@ namespace ejff::gpu
 {
 
 CommandBuffer::CommandBuffer(Device &device)
-    : ptr_(create(device), SDL_GPUCommandBufferDeleter{})
+    : ptr_(acquire(device), SDL_GPUCommandBufferDeleter{})
 {
 }
 
@@ -23,7 +23,7 @@ void CommandBuffer::submit()
     }
 }
 
-SDL_GPUCommandBuffer *CommandBuffer::create(Device &device)
+SDL_GPUCommandBuffer *CommandBuffer::acquire(Device &device)
 {
     auto commandBuffer = SDL_AcquireGPUCommandBuffer(device.get());
     if (!commandBuffer)
