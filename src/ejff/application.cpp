@@ -8,7 +8,6 @@
 #include "ejff/gpu/resources/vertex.hpp"
 #include "ejff/surface.hpp"
 
-#include <iostream>
 #include <vector>
 
 #include <fmt/format.h>
@@ -16,7 +15,7 @@
 namespace ejff
 {
 
-std::vector<gpu::Vertex> vertices = {
+static std::vector<gpu::Vertex> vertices = {
     {
         {0.5f, -0.5f, 0.0f},
         {1.0f, 0.0f, 0.0f, 1.0f},
@@ -43,17 +42,10 @@ std::vector<gpu::Vertex> vertices = {
     },
 };
 
-std::vector<Uint32> indices = {0, 1, 2, 2, 1, 3};
+static std::vector<Uint32> indices = {0, 1, 2, 2, 1, 3};
 
 void Application::init(int argc, char **argv)
 {
-    std::vector<std::string_view> args(argv, argv + argc);
-
-    for (const auto &arg : args)
-    {
-        std::cout << arg << '\n';
-    }
-
     window_ =
         Window("Hello, Engine Just For Fun (EJFF for short)!", 1280, 720,
                Window::Flags::eResizable | Window::Flags::eHighPixelDensity);
@@ -76,54 +68,57 @@ void Application::init(int argc, char **argv)
     auto fragmentShader =
         gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
-    auto vertexAttributes = gpu::Vertex::getVertexAttributes();
-    auto vertexBufferDescription = gpu::Vertex::getVertexBufferDescription();
+    auto vertexAttributes = gpu::Vertex::getAttributes();
+    auto vertexBufferDescription = gpu::Vertex::getBufferDescriptions();
 
-    SDL_GPUVertexInputState vertexInputState{};
-    vertexInputState.vertex_buffer_descriptions = &vertexBufferDescription;
-    vertexInputState.num_vertex_buffers = 1;
-    vertexInputState.vertex_attributes = vertexAttributes.data();
-    vertexInputState.num_vertex_attributes =
-        static_cast<Uint32>(vertexAttributes.size());
+    gpu::Vertex::InputState vertexInputState{};
+    vertexInputState.pBufferDescriptions = vertexBufferDescription.data();
+    vertexInputState.bufferCount = vertexBufferDescription.size();
+    vertexInputState.pAttributes = vertexAttributes.data();
+    vertexInputState.attributesCount = vertexAttributes.size();
 
-    SDL_GPURasterizerState rasterizerState{};
-    rasterizerState.fill_mode = SDL_GPU_FILLMODE_FILL;
-    rasterizerState.cull_mode = SDL_GPU_CULLMODE_BACK;
-    rasterizerState.front_face = SDL_GPU_FRONTFACE_CLOCKWISE;
+    gpu::GraphicsPipeline::RasterizerState rasterizerState{};
+    rasterizerState.fillMode = gpu::GraphicsPipeline::FillMode::eFill;
+    rasterizerState.cullMode =
+        gpu::GraphicsPipeline::CullMode::SDL_GPU_CULLMODE_BACK;
+    rasterizerState.frontFace = gpu::GraphicsPipeline::FrontFace::eClockWise;
 
-    SDL_GPUMultisampleState multisampleState{};
-    multisampleState.sample_count = SDL_GPU_SAMPLECOUNT_1;
+    gpu::GraphicsPipeline::MultisampleState multisampleState{};
+    multisampleState.sampleCount = gpu::GraphicsPipeline::SampleCount::e1;
 
-    SDL_GPUDepthStencilState depthStencilState{};
-    depthStencilState.enable_depth_test = false;
+    gpu::GraphicsPipeline::DepthStencilState depthStencilState{};
+    depthStencilState.enableDepthTest = false;
 
-    SDL_GPUColorTargetBlendState colorTargetBlendState{};
-    colorTargetBlendState.src_color_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
-    colorTargetBlendState.dst_color_blendfactor =
-        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
-    colorTargetBlendState.color_blend_op = SDL_GPU_BLENDOP_ADD;
-    colorTargetBlendState.src_alpha_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
-    colorTargetBlendState.dst_alpha_blendfactor =
-        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
-    colorTargetBlendState.alpha_blend_op = SDL_GPU_BLENDOP_ADD;
-    colorTargetBlendState.color_write_mask =
-        SDL_GPU_COLORCOMPONENT_R | SDL_GPU_COLORCOMPONENT_G |
-        SDL_GPU_COLORCOMPONENT_B | SDL_GPU_COLORCOMPONENT_A;
-    colorTargetBlendState.enable_blend = true;
+    gpu::GraphicsPipeline::ColorTargetBlendState blendState{};
+    blendState.srcColorBlendFactor =
+        gpu::GraphicsPipeline::BlendFactor::eSrcAlpha;
+    blendState.dstColorBlendFactor =
+        gpu::GraphicsPipeline::BlendFactor::eOneMinusSrcAlpha;
+    blendState.colorBlendOp = gpu::GraphicsPipeline::BlendOp::eAdd;
+    blendState.srcAlphaBlendFactor =
+        gpu::GraphicsPipeline::BlendFactor::eSrcAlpha;
+    blendState.dstAlphaBlendFactor =
+        gpu::GraphicsPipeline::BlendFactor::eOneMinusSrcAlpha;
+    blendState.alphaBlendOp = gpu::GraphicsPipeline::BlendOp::eAdd;
+    blendState.colorWriteMask = gpu::GraphicsPipeline::ColorComponentFlags::eR |
+                                gpu::GraphicsPipeline::ColorComponentFlags::eG |
+                                gpu::GraphicsPipeline::ColorComponentFlags::eB |
+                                gpu::GraphicsPipeline::ColorComponentFlags::eA;
+    blendState.enableBlend = true;
 
-    SDL_GPUColorTargetDescription colorTargetDescription{};
-    colorTargetDescription.format =
-        SDL_GetGPUSwapchainTextureFormat(device_.get(), window_.get());
-    colorTargetDescription.blend_state = colorTargetBlendState;
+    gpu::GraphicsPipeline::ColorTargetDescription colorTargetDesc{};
+    colorTargetDesc.format = static_cast<gpu::Texture::Format>(
+        SDL_GetGPUSwapchainTextureFormat(device_.get(), window_.get()));
+    colorTargetDesc.blendState = blendState;
 
-    SDL_GPUGraphicsPipelineTargetInfo targetInfo{};
-    targetInfo.color_target_descriptions = &colorTargetDescription;
-    targetInfo.num_color_targets = 1;
+    gpu::GraphicsPipeline::TargetInfo targetInfo{};
+    targetInfo.pColorTargetDescriptions = &colorTargetDesc;
+    targetInfo.colorTargetCount = 1;
 
-    graphicsPipeline_ = ejff::gpu::GraphicsPipeline(
+    graphicsPipeline_ = gpu::GraphicsPipeline(
         device_, vertexShader, fragmentShader, vertexInputState,
-        SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, rasterizerState, multisampleState,
-        depthStencilState, targetInfo);
+        gpu::GraphicsPipeline::PrimitiveType::eTriangleList, rasterizerState,
+        multisampleState, depthStencilState, targetInfo);
 
     vertexBuffer_ = gpu::Buffer(device_, gpu::Buffer::UsageFlags::eVertex,
                                 sizeof(gpu::Vertex) * vertices.size());
