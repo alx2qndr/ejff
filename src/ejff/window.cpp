@@ -15,7 +15,8 @@ Window::Window(std::string_view title, int width, int height, Flags flags)
     if (!window)
     {
         throw std::runtime_error(fmt::format(
-            "Couldn't create SDL_Window. SDL_CreateWindow failed: {}", SDL_GetError()));
+            "Couldn't create SDL_Window. SDL_CreateWindow failed: {}",
+            SDL_GetError()));
     }
 
     ptr_.reset(window);

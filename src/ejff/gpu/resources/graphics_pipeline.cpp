@@ -18,8 +18,9 @@ GraphicsPipeline::GraphicsPipeline(Device &device, Shader &vertexShader,
                                    SDL_GPUMultisampleState multisampleState,
                                    SDL_GPUDepthStencilState depthStencilState,
                                    SDL_GPUGraphicsPipelineTargetInfo targetInfo)
-    : ptr_(create(device, vertexShader, fragmentShader, vertexInputState, primitiveType,
-                  rasterizerState, multisampleState, depthStencilState, targetInfo),
+    : ptr_(create(device, vertexShader, fragmentShader, vertexInputState,
+                  primitiveType, rasterizerState, multisampleState,
+                  depthStencilState, targetInfo),
            SDL_GPUGraphicsPipelineDeleter{device.get()})
 {
 }
@@ -36,8 +37,9 @@ void GraphicsPipeline::bind(RenderPass &renderPass)
 
 SDL_GPUGraphicsPipeline *GraphicsPipeline::create(
     Device &device, Shader &vertexShader, Shader &fragmentShader,
-    SDL_GPUVertexInputState vertexInputState, SDL_GPUPrimitiveType primitiveType,
-    SDL_GPURasterizerState rasterizerState, SDL_GPUMultisampleState multisampleState,
+    SDL_GPUVertexInputState vertexInputState,
+    SDL_GPUPrimitiveType primitiveType, SDL_GPURasterizerState rasterizerState,
+    SDL_GPUMultisampleState multisampleState,
     SDL_GPUDepthStencilState depthStencilState,
     SDL_GPUGraphicsPipelineTargetInfo targetInfo)
 {
@@ -51,12 +53,14 @@ SDL_GPUGraphicsPipeline *GraphicsPipeline::create(
     createInfo.depth_stencil_state = depthStencilState;
     createInfo.target_info = targetInfo;
 
-    auto graphicsPipeline = SDL_CreateGPUGraphicsPipeline(device.get(), &createInfo);
+    auto graphicsPipeline =
+        SDL_CreateGPUGraphicsPipeline(device.get(), &createInfo);
     if (!graphicsPipeline)
     {
-        throw std::runtime_error(fmt::format("Couldn't create SDL_GPUGraphicsPipeline. "
-                                             "SDL_CreateGPUGraphicsPipeline failed: {}",
-                                             SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't create SDL_GPUGraphicsPipeline. "
+                        "SDL_CreateGPUGraphicsPipeline failed: {}",
+                        SDL_GetError()));
     }
 
     return graphicsPipeline;

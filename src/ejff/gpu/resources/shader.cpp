@@ -12,18 +12,19 @@
 namespace ejff::gpu
 {
 
-Shader::Shader(Device &device, const std::filesystem::path &path, uint32_t numSamplers,
-               uint32_t numStorageTextures, uint32_t numStorageBuffers,
-               uint32_t numUniformBuffers)
-    : ptr_(create(device, path, numSamplers, numStorageTextures, numStorageBuffers,
-                  numUniformBuffers),
+Shader::Shader(Device &device, const std::filesystem::path &path,
+               uint32_t numSamplers, uint32_t numStorageTextures,
+               uint32_t numStorageBuffers, uint32_t numUniformBuffers)
+    : ptr_(create(device, path, numSamplers, numStorageTextures,
+                  numStorageBuffers, numUniformBuffers),
            SDL_GPUShaderDeleter{device.get()})
 {
 }
 
 SDL_GPUShader *Shader::create(Device &device, const std::filesystem::path &path,
                               uint32_t numSamplers, uint32_t numStorageTextures,
-                              uint32_t numStorageBuffers, uint32_t numUniformBuffers)
+                              uint32_t numStorageBuffers,
+                              uint32_t numUniformBuffers)
 {
     auto const extension = path.extension().string();
 
@@ -85,8 +86,8 @@ SDL_GPUShader *Shader::create(Device &device, const std::filesystem::path &path,
     std::ifstream file(binary_path, std::ios::binary | std::ios::ate);
     if (!file)
     {
-        throw std::runtime_error(
-            fmt::format("Couldn't open shader binary '{}'", binary_path.string()));
+        throw std::runtime_error(fmt::format("Couldn't open shader binary '{}'",
+                                             binary_path.string()));
     }
 
     auto size = file.tellg();
@@ -94,8 +95,8 @@ SDL_GPUShader *Shader::create(Device &device, const std::filesystem::path &path,
     std::vector<std::byte> buffer(size);
     if (!file.read(reinterpret_cast<char *>(buffer.data()), size))
     {
-        throw std::runtime_error(
-            fmt::format("Couldn't read shader binary '{}'", binary_path.string()));
+        throw std::runtime_error(fmt::format("Couldn't read shader binary '{}'",
+                                             binary_path.string()));
     }
 
     SDL_GPUShaderCreateInfo createInfo{};
@@ -112,9 +113,9 @@ SDL_GPUShader *Shader::create(Device &device, const std::filesystem::path &path,
     auto shader = SDL_CreateGPUShader(device.get(), &createInfo);
     if (!shader)
     {
-        throw std::runtime_error(
-            fmt::format("Couldn't create SDL_GPUShader. SDL_CreateGPUShader failed: {}",
-                        SDL_GetError()));
+        throw std::runtime_error(fmt::format(
+            "Couldn't create SDL_GPUShader. SDL_CreateGPUShader failed: {}",
+            SDL_GetError()));
     }
 
     return shader;

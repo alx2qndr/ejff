@@ -16,8 +16,9 @@ CopyPass::CopyPass(CommandBuffer &command_buffer)
 {
 }
 
-void CopyPass::uploadToBuffer(TransferBuffer &transferBuffer, uint32_t sourceOffset,
-                              Buffer &buffer, uint32_t destinationOffset, uint32_t size,
+void CopyPass::uploadToBuffer(TransferBuffer &transferBuffer,
+                              uint32_t sourceOffset, Buffer &buffer,
+                              uint32_t destinationOffset, uint32_t size,
                               bool cycle)
 {
     SDL_GPUTransferBufferLocation transferBufferLocation{};
@@ -29,14 +30,16 @@ void CopyPass::uploadToBuffer(TransferBuffer &transferBuffer, uint32_t sourceOff
     bufferRegion.offset = static_cast<Uint32>(destinationOffset);
     bufferRegion.size = static_cast<Uint32>(size);
 
-    SDL_UploadToGPUBuffer(ptr_.get(), &transferBufferLocation, &bufferRegion, cycle);
+    SDL_UploadToGPUBuffer(ptr_.get(), &transferBufferLocation, &bufferRegion,
+                          cycle);
 }
 
 void CopyPass::uploadToTexture(TransferBuffer &transferBuffer, uint32_t offset,
                                uint32_t pixels_per_row, uint32_t rows_per_layer,
-                               Texture &texture, uint32_t mipLevel, uint32_t layer,
-                               uint32_t x, uint32_t y, uint32_t z, uint32_t width,
-                               uint32_t height, uint32_t depth, bool cycle)
+                               Texture &texture, uint32_t mipLevel,
+                               uint32_t layer, uint32_t x, uint32_t y,
+                               uint32_t z, uint32_t width, uint32_t height,
+                               uint32_t depth, bool cycle)
 {
     SDL_GPUTextureTransferInfo transferInfo{};
     transferInfo.transfer_buffer = transferBuffer.get();

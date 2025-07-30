@@ -29,13 +29,15 @@ class Sampler
 public:
     Sampler() = default;
 
-    explicit Sampler(Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
+    explicit Sampler(Device &device, SDL_GPUFilter minFilter,
+                     SDL_GPUFilter magFilter,
                      SDL_GPUSamplerMipmapMode mipmapMode,
                      SDL_GPUSamplerAddressMode addressModeU,
                      SDL_GPUSamplerAddressMode addressModeV,
                      SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
-                     float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
-                     float maxLod, bool enableAnisotropy, bool enableCompare);
+                     float maxAnisotropy, SDL_GPUCompareOp compareOp,
+                     float minLod, float maxLod, bool enableAnisotropy,
+                     bool enableCompare);
 
     Sampler(const Sampler &) = delete;
     Sampler &operator=(const Sampler &) = delete;
@@ -49,12 +51,15 @@ public:
 
 private:
     SDL_GPUSampler *create(Device &device, SDL_GPUFilter minFilter,
-                           SDL_GPUFilter magFilter, SDL_GPUSamplerMipmapMode mipmapMode,
+                           SDL_GPUFilter magFilter,
+                           SDL_GPUSamplerMipmapMode mipmapMode,
                            SDL_GPUSamplerAddressMode addressModeU,
                            SDL_GPUSamplerAddressMode addressModeV,
-                           SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
-                           float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
-                           float maxLod, bool enableAnisotropy, bool enableCompare);
+                           SDL_GPUSamplerAddressMode addressModeW,
+                           float mipLodBias, float maxAnisotropy,
+                           SDL_GPUCompareOp compareOp, float minLod,
+                           float maxLod, bool enableAnisotropy,
+                           bool enableCompare);
 
     std::unique_ptr<SDL_GPUSampler, SDL_GPUSamplerDeleter> ptr_{nullptr};
 };

@@ -11,7 +11,10 @@ struct SDL_GPUTransferBufferDeleter
 {
     SDL_GPUDevice *device;
 
-    SDL_GPUTransferBufferDeleter(SDL_GPUDevice *device = nullptr) : device(device) {}
+    SDL_GPUTransferBufferDeleter(SDL_GPUDevice *device = nullptr)
+        : device(device)
+    {
+    }
 
     void operator()(SDL_GPUTransferBuffer *transfer_buffer) const noexcept
     {
@@ -46,10 +49,12 @@ public:
     SDL_GPUTransferBuffer *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUTransferBuffer *create(Device &device, SDL_GPUTransferBufferUsage usage,
+    SDL_GPUTransferBuffer *create(Device &device,
+                                  SDL_GPUTransferBufferUsage usage,
                                   uint32_t size);
 
-    std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_{nullptr};
+    std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_{
+        nullptr};
 };
 
 } // namespace ejff::gpu

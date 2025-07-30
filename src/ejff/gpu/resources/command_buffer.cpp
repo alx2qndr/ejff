@@ -17,9 +17,10 @@ void CommandBuffer::submit()
 {
     if (!SDL_SubmitGPUCommandBuffer(ptr_.get()))
     {
-        throw std::runtime_error(fmt::format(
-            "Couldn't submit GPU command buffer. SDL_SubmitGPUCommandBuffer failed: {}",
-            SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't submit GPU command buffer. "
+                        "SDL_SubmitGPUCommandBuffer failed: {}",
+                        SDL_GetError()));
     }
 }
 
@@ -28,9 +29,10 @@ SDL_GPUCommandBuffer *CommandBuffer::acquire(Device &device)
     auto commandBuffer = SDL_AcquireGPUCommandBuffer(device.get());
     if (!commandBuffer)
     {
-        throw std::runtime_error(fmt::format("Couldn't create SDL_GPUCommandBuffer. "
-                                             "SDL_AcquireGPUCommandBuffer failed: {}",
-                                             SDL_GetError()));
+        throw std::runtime_error(
+            fmt::format("Couldn't create SDL_GPUCommandBuffer. "
+                        "SDL_AcquireGPUCommandBuffer failed: {}",
+                        SDL_GetError()));
     }
 
     return commandBuffer;

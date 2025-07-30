@@ -41,7 +41,8 @@ public:
 private:
     SDL_GPUCommandBuffer *acquire(Device &device);
 
-    std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_{nullptr};
+    std::unique_ptr<SDL_GPUCommandBuffer, SDL_GPUCommandBufferDeleter> ptr_{
+        nullptr};
 };
 
 } // namespace ejff::gpu

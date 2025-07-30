@@ -29,10 +29,11 @@ class Texture
 public:
     Texture() = default;
 
-    explicit Texture(Device &device, SDL_GPUTextureType type, SDL_GPUTextureFormat format,
-                     SDL_GPUTextureUsageFlags usage, uint32_t width, uint32_t height,
-                     uint32_t layerCountOrDepth, uint32_t numLevels,
-                     SDL_GPUSampleCount sampleCount);
+    explicit Texture(Device &device, SDL_GPUTextureType type,
+                     SDL_GPUTextureFormat format,
+                     SDL_GPUTextureUsageFlags usage, uint32_t width,
+                     uint32_t height, uint32_t layerCountOrDepth,
+                     uint32_t numLevels, SDL_GPUSampleCount sampleCount);
 
     Texture(const Texture &) = delete;
     Texture &operator=(const Texture &) = delete;
@@ -46,8 +47,9 @@ public:
 
 private:
     SDL_GPUTexture *create(Device &device, SDL_GPUTextureType type,
-                           SDL_GPUTextureFormat format, SDL_GPUTextureUsageFlags usage,
-                           uint32_t width, uint32_t height, uint32_t layerCountOrDepth,
+                           SDL_GPUTextureFormat format,
+                           SDL_GPUTextureUsageFlags usage, uint32_t width,
+                           uint32_t height, uint32_t layerCountOrDepth,
                            uint32_t numLevels, SDL_GPUSampleCount sampleCount);
 
     std::unique_ptr<SDL_GPUTexture, SDL_GPUTextureDeleter> ptr_{nullptr};

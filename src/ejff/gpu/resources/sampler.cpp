@@ -8,16 +8,16 @@
 namespace ejff::gpu
 {
 
-Sampler::Sampler(Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
-                 SDL_GPUSamplerMipmapMode mipmapMode,
+Sampler::Sampler(Device &device, SDL_GPUFilter minFilter,
+                 SDL_GPUFilter magFilter, SDL_GPUSamplerMipmapMode mipmapMode,
                  SDL_GPUSamplerAddressMode addressModeU,
                  SDL_GPUSamplerAddressMode addressModeV,
                  SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
                  float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
                  float maxLod, bool enableAnisotropy, bool enableCompare)
-    : ptr_(create(device, minFilter, magFilter, mipmapMode, addressModeU, addressModeV,
-                  addressModeW, mipLodBias, maxAnisotropy, compareOp, minLod, maxLod,
-                  enableAnisotropy, enableCompare),
+    : ptr_(create(device, minFilter, magFilter, mipmapMode, addressModeU,
+                  addressModeV, addressModeW, mipLodBias, maxAnisotropy,
+                  compareOp, minLod, maxLod, enableAnisotropy, enableCompare),
            SDL_GPUSamplerDeleter{device.get()})
 {
 }
@@ -25,9 +25,10 @@ Sampler::Sampler(Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilte
 SDL_GPUSampler *Sampler::create(
     Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
     SDL_GPUSamplerMipmapMode mipmapMode, SDL_GPUSamplerAddressMode addressModeU,
-    SDL_GPUSamplerAddressMode addressModeV, SDL_GPUSamplerAddressMode addressModeW,
-    float mipLodBias, float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
-    float maxLod, bool enableAnisotropy, bool enableCompare)
+    SDL_GPUSamplerAddressMode addressModeV,
+    SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
+    float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod, float maxLod,
+    bool enableAnisotropy, bool enableCompare)
 {
     SDL_GPUSamplerCreateInfo createInfo{};
     createInfo.min_filter = minFilter;

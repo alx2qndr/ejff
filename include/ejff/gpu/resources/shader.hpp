@@ -45,7 +45,8 @@ public:
 
     explicit Shader(Device &device, const std::filesystem::path &path,
                     uint32_t numSamplers = 0, uint32_t numStorageTextures = 0,
-                    uint32_t numStorageBuffers = 0, uint32_t numUniformBuffers = 0);
+                    uint32_t numStorageBuffers = 0,
+                    uint32_t numUniformBuffers = 0);
 
     Shader(const Shader &) = delete;
     Shader &operator=(const Shader &) = delete;
@@ -60,7 +61,8 @@ public:
 private:
     SDL_GPUShader *create(Device &device, const std::filesystem::path &path,
                           uint32_t numSamplers, uint32_t numStorageTextures,
-                          uint32_t numStorageBuffers, uint32_t numUniformBuffers);
+                          uint32_t numStorageBuffers,
+                          uint32_t numUniformBuffers);
 
     std::unique_ptr<SDL_GPUShader, SDL_GPUShaderDeleter> ptr_{nullptr};
 };

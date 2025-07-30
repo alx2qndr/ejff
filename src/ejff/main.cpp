@@ -20,8 +20,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
     {
         if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO))
         {
-            throw std::runtime_error(fmt::format(
-                "Couldn't initialize SDL. SDL_Init failed: {}", SDL_GetError()));
+            throw std::runtime_error(
+                fmt::format("Couldn't initialize SDL. SDL_Init failed: {}",
+                            SDL_GetError()));
         }
 
         auto *state = new AppState();
@@ -31,7 +32,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char **argv)
     catch (const std::exception &e)
     {
         std::cerr << fmt::format(
-            "Couldn't initialize application. SDL_AppInit failed: {}\n", e.what());
+            "Couldn't initialize application. SDL_AppInit failed: {}\n",
+            e.what());
 
         return SDL_APP_FAILURE;
     }
@@ -54,7 +56,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     catch (const std::exception &e)
     {
         std::cerr << fmt::format(
-            "Couldn't iterate application. SDL_AppIterate failed: {}\n", e.what());
+            "Couldn't iterate application. SDL_AppIterate failed: {}\n",
+            e.what());
         return SDL_APP_FAILURE;
     }
 
@@ -79,7 +82,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
         catch (const std::exception &e)
         {
             std::cerr << fmt::format(
-                "Couldn't quit application. SDL_AppQuit failed: {}\n", e.what());
+                "Couldn't quit application. SDL_AppQuit failed: {}\n",
+                e.what());
         }
     }
 

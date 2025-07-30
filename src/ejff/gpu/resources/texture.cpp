@@ -8,10 +8,10 @@
 namespace ejff::gpu
 {
 
-Texture::Texture(Device &device, SDL_GPUTextureType type, SDL_GPUTextureFormat format,
-                 SDL_GPUTextureUsageFlags usage, uint32_t width, uint32_t height,
-                 uint32_t layerCountOrDepth, uint32_t numLevels,
-                 SDL_GPUSampleCount sampleCount)
+Texture::Texture(Device &device, SDL_GPUTextureType type,
+                 SDL_GPUTextureFormat format, SDL_GPUTextureUsageFlags usage,
+                 uint32_t width, uint32_t height, uint32_t layerCountOrDepth,
+                 uint32_t numLevels, SDL_GPUSampleCount sampleCount)
     : ptr_(create(device, type, format, usage, width, height, layerCountOrDepth,
                   numLevels, sampleCount),
            SDL_GPUTextureDeleter{device.get()})
@@ -22,7 +22,8 @@ SDL_GPUTexture *Texture::create(Device &device, SDL_GPUTextureType type,
                                 SDL_GPUTextureFormat format,
                                 SDL_GPUTextureUsageFlags usage, uint32_t width,
                                 uint32_t height, uint32_t layerCountOrDepth,
-                                uint32_t numLevels, SDL_GPUSampleCount sampleCount)
+                                uint32_t numLevels,
+                                SDL_GPUSampleCount sampleCount)
 {
     SDL_GPUTextureCreateInfo createInfo{};
     createInfo.type = type;

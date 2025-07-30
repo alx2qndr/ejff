@@ -25,10 +25,11 @@ class RenderPass
 public:
     RenderPass() = default;
 
-    explicit RenderPass(CommandBuffer &commandBuffer,
-                        const SDL_GPUColorTargetInfo *colorTargetInfos,
-                        uint32_t numColorTargets,
-                        const SDL_GPUDepthStencilTargetInfo *depthStencilTargetInfo);
+    explicit RenderPass(
+        CommandBuffer &commandBuffer,
+        const SDL_GPUColorTargetInfo *colorTargetInfos,
+        uint32_t numColorTargets,
+        const SDL_GPUDepthStencilTargetInfo *depthStencilTargetInfo);
 
     RenderPass(const RenderPass &) = delete;
     RenderPass &operator=(const RenderPass &) = delete;
@@ -42,7 +43,8 @@ public:
 
 private:
     SDL_GPURenderPass *create(
-        CommandBuffer &commandBuffer, const SDL_GPUColorTargetInfo *colorTargetInfos,
+        CommandBuffer &commandBuffer,
+        const SDL_GPUColorTargetInfo *colorTargetInfos,
         uint32_t numColorTargets,
         const SDL_GPUDepthStencilTargetInfo *depthStencilTargetInfo);
 

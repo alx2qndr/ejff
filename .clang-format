@@ -1,7 +1,7 @@
 ---
 BasedOnStyle: Microsoft
 
-ColumnLimit: 90
+ColumnLimit: 80
 
 AccessModifierOffset: -4
 

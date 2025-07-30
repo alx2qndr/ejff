@@ -15,7 +15,10 @@ struct SDL_GPUGraphicsPipelineDeleter
 {
     SDL_GPUDevice *device;
 
-    SDL_GPUGraphicsPipelineDeleter(SDL_GPUDevice *device = nullptr) : device(device) {}
+    SDL_GPUGraphicsPipelineDeleter(SDL_GPUDevice *device = nullptr)
+        : device(device)
+    {
+    }
 
     void operator()(SDL_GPUGraphicsPipeline *graphicsPipeline) const noexcept
     {
@@ -53,17 +56,17 @@ public:
     SDL_GPUGraphicsPipeline *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUGraphicsPipeline *create(Device &device, Shader &vertexShader,
-                                    Shader &fragmentShader,
-                                    SDL_GPUVertexInputState vertexInputState,
-                                    SDL_GPUPrimitiveType primitiveType,
-                                    SDL_GPURasterizerState rasterizerState,
-                                    SDL_GPUMultisampleState multisampleState,
-                                    SDL_GPUDepthStencilState depthStencilState,
-                                    SDL_GPUGraphicsPipelineTargetInfo targetInfo);
+    SDL_GPUGraphicsPipeline *create(
+        Device &device, Shader &vertexShader, Shader &fragmentShader,
+        SDL_GPUVertexInputState vertexInputState,
+        SDL_GPUPrimitiveType primitiveType,
+        SDL_GPURasterizerState rasterizerState,
+        SDL_GPUMultisampleState multisampleState,
+        SDL_GPUDepthStencilState depthStencilState,
+        SDL_GPUGraphicsPipelineTargetInfo targetInfo);
 
-    std::unique_ptr<SDL_GPUGraphicsPipeline, SDL_GPUGraphicsPipelineDeleter> ptr_{
-        nullptr};
+    std::unique_ptr<SDL_GPUGraphicsPipeline, SDL_GPUGraphicsPipelineDeleter>
+        ptr_{nullptr};
 };
 
 } // namespace ejff::gpu

@@ -54,12 +54,14 @@ void Application::init(int argc, char **argv)
         std::cout << arg << '\n';
     }
 
-    window_ = Window("Hello, Engine Just For Fun (EJFF for short)!", 1280, 720,
-                     Window::Flags::eResizable | Window::Flags::eHighPixelDensity);
+    window_ =
+        Window("Hello, Engine Just For Fun (EJFF for short)!", 1280, 720,
+               Window::Flags::eResizable | Window::Flags::eHighPixelDensity);
 
-    device_ = gpu::Device(gpu::Shader::Format::eSPIRV | gpu::Shader::Format::eMSL |
-                              gpu::Shader::Format::eDXIL,
-                          true, nullptr);
+    device_ =
+        gpu::Device(gpu::Shader::Format::eSPIRV | gpu::Shader::Format::eMSL |
+                        gpu::Shader::Format::eDXIL,
+                    true, nullptr);
 
     if (!SDL_ClaimWindowForGPUDevice(device_.get(), window_.get()))
     {
@@ -69,7 +71,8 @@ void Application::init(int argc, char **argv)
                         SDL_GetError()));
     }
 
-    auto vertexShader = gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
+    auto vertexShader =
+        gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
     auto fragmentShader =
         gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
@@ -80,7 +83,8 @@ void Application::init(int argc, char **argv)
     vertexInputState.vertex_buffer_descriptions = &vertexBufferDescription;
     vertexInputState.num_vertex_buffers = 1;
     vertexInputState.vertex_attributes = vertexAttributes.data();
-    vertexInputState.num_vertex_attributes = static_cast<Uint32>(vertexAttributes.size());
+    vertexInputState.num_vertex_attributes =
+        static_cast<Uint32>(vertexAttributes.size());
 
     SDL_GPURasterizerState rasterizerState{};
     rasterizerState.fill_mode = SDL_GPU_FILLMODE_FILL;
@@ -95,14 +99,16 @@ void Application::init(int argc, char **argv)
 
     SDL_GPUColorTargetBlendState colorTargetBlendState{};
     colorTargetBlendState.src_color_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
-    colorTargetBlendState.dst_color_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+    colorTargetBlendState.dst_color_blendfactor =
+        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
     colorTargetBlendState.color_blend_op = SDL_GPU_BLENDOP_ADD;
     colorTargetBlendState.src_alpha_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
-    colorTargetBlendState.dst_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
+    colorTargetBlendState.dst_alpha_blendfactor =
+        SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
     colorTargetBlendState.alpha_blend_op = SDL_GPU_BLENDOP_ADD;
     colorTargetBlendState.color_write_mask =
-        SDL_GPU_COLORCOMPONENT_R | SDL_GPU_COLORCOMPONENT_G | SDL_GPU_COLORCOMPONENT_B |
-        SDL_GPU_COLORCOMPONENT_A;
+        SDL_GPU_COLORCOMPONENT_R | SDL_GPU_COLORCOMPONENT_G |
+        SDL_GPU_COLORCOMPONENT_B | SDL_GPU_COLORCOMPONENT_A;
     colorTargetBlendState.enable_blend = true;
 
     SDL_GPUColorTargetDescription colorTargetDescription{};
@@ -125,13 +131,15 @@ void Application::init(int argc, char **argv)
     indexBuffer_ = gpu::Buffer(device_, gpu::Buffer::UsageFlags::eIndex,
                                sizeof(Uint32) * indices.size());
 
-    gpu::TransferBuffer transferBuffer(device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+    gpu::TransferBuffer transferBuffer(device_,
+                                       SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
                                        sizeof(gpu::Vertex) * vertices.size() +
                                            sizeof(Uint32) * indices.size());
 
-    transferBuffer.upload(device_, vertices.data(), sizeof(gpu::Vertex) * vertices.size(),
-                          0);
-    transferBuffer.upload(device_, indices.data(), sizeof(uint32_t) * indices.size(),
+    transferBuffer.upload(device_, vertices.data(),
+                          sizeof(gpu::Vertex) * vertices.size(), 0);
+    transferBuffer.upload(device_, indices.data(),
+                          sizeof(uint32_t) * indices.size(),
                           sizeof(gpu::Vertex) * vertices.size());
 
     gpu::CommandBuffer commandBuffer(device_);
@@ -139,15 +147,17 @@ void Application::init(int argc, char **argv)
 
     copyPass.uploadToBuffer(transferBuffer, 0, vertexBuffer_, 0,
                             sizeof(gpu::Vertex) * vertices.size());
-    copyPass.uploadToBuffer(transferBuffer, sizeof(gpu::Vertex) * vertices.size(),
-                            indexBuffer_, 0, sizeof(Uint32) * indices.size());
+    copyPass.uploadToBuffer(transferBuffer,
+                            sizeof(gpu::Vertex) * vertices.size(), indexBuffer_,
+                            0, sizeof(Uint32) * indices.size());
 
-    sampler_ = gpu::Sampler(device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR,
-                            SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
-                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-                            SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f,
-                            SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f, false, false);
+    sampler_ =
+        gpu::Sampler(device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR,
+                     SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f,
+                     SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f, false, false);
 
     auto imageSurface = Surface("../assets/textures/003_basecolor_0.png");
     imageSurface.convert(SDL_PIXELFORMAT_ABGR8888);
@@ -158,12 +168,13 @@ void Application::init(int argc, char **argv)
                             SDL_GPU_TEXTUREUSAGE_SAMPLER, imageSurface.get()->w,
                             imageSurface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
 
-    gpu::TransferBuffer textureTransferBuffer(device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-                                              imageSurface.get()->h *
-                                                  imageSurface.get()->pitch);
+    gpu::TransferBuffer textureTransferBuffer(
+        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+        imageSurface.get()->h * imageSurface.get()->pitch);
 
     textureTransferBuffer.upload(device_, imageSurface.get()->pixels,
-                                 imageSurface.get()->h * imageSurface.get()->pitch);
+                                 imageSurface.get()->h *
+                                     imageSurface.get()->pitch);
 
     copyPass.uploadToTexture(textureTransferBuffer, 0, imageSurface.get()->w,
                              imageSurface.get()->h, texture_, 0, 0, 0, 0, 0,
@@ -186,8 +197,9 @@ void Application::iterate()
     gpu::CommandBuffer commandBuffer(device_);
 
     SDL_GPUTexture *swapchainTexture;
-    if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer.get(), window_.get(),
-                                               &swapchainTexture, nullptr, nullptr))
+    if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer.get(),
+                                               window_.get(), &swapchainTexture,
+                                               nullptr, nullptr))
     {
         throw std::runtime_error(
             fmt::format("Couldn't acquire SDL_GPUTexture. "
@@ -224,10 +236,11 @@ void Application::iterate()
         textureSamplerBinding.texture = texture_.get();
         textureSamplerBinding.sampler = sampler_.get();
 
-        SDL_BindGPUFragmentSamplers(renderPass.get(), 0, &textureSamplerBinding, 1);
+        SDL_BindGPUFragmentSamplers(renderPass.get(), 0, &textureSamplerBinding,
+                                    1);
 
-        SDL_DrawGPUIndexedPrimitives(renderPass.get(),
-                                     static_cast<Uint32>(indices.size()), 1, 0, 0, 0);
+        SDL_DrawGPUIndexedPrimitives(
+            renderPass.get(), static_cast<Uint32>(indices.size()), 1, 0, 0, 0);
     }
 }
 

@@ -67,7 +67,10 @@ public:
 
     ~Window() = default;
 
-    void reset(SDL_Window *new_window = nullptr) noexcept { ptr_.reset(new_window); }
+    void reset(SDL_Window *new_window = nullptr) noexcept
+    {
+        ptr_.reset(new_window);
+    }
 
     SDL_Window *release() noexcept { return ptr_.release(); }
 
