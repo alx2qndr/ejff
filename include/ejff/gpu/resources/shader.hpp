@@ -67,4 +67,4 @@ private:
 
 } // namespace ejff::gpu
 
-ENABLE_BITMASK_OPERATORS(ejff::gpu::Shader::Format)
+ENABLE_BITMASK_OPERATORS(ejff::gpu::Shader::Format);

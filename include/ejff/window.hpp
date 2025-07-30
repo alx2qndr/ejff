@@ -82,4 +82,4 @@ private:
 
 } // namespace ejff
 
-ENABLE_BITMASK_OPERATORS(ejff::Window::Flags)
+ENABLE_BITMASK_OPERATORS(ejff::Window::Flags);

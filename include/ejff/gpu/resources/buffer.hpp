@@ -60,4 +60,4 @@ private:
 
 } // namespace ejff::gpu
 
-ENABLE_BITMASK_OPERATORS(ejff::gpu::Buffer::UsageFlags)
+ENABLE_BITMASK_OPERATORS(ejff::gpu::Buffer::UsageFlags);
