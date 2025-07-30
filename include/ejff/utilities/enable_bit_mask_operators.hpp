@@ -11,44 +11,59 @@ struct EnableBitMaskOperators : std::false_type
     template <>                                                                          \
     struct EnableBitMaskOperators<x> : std::true_type                                    \
     {                                                                                    \
-    };
+    }
 
 template <typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::value, Enum>::type operator|(
-    Enum lhs, Enum rhs)
+using EnableIfBitmask = std::enable_if_t<EnableBitMaskOperators<Enum>::value, Enum>;
+
+template <typename Enum>
+using EnableIfBitmaskRef = std::enable_if_t<EnableBitMaskOperators<Enum>::value, Enum &>;
+
+template <typename Enum>
+EnableIfBitmask<Enum> operator|(Enum lhs, Enum rhs)
 {
-    using T = typename std::underlying_type<Enum>::type;
+    using T = std::underlying_type_t<Enum>;
     return static_cast<Enum>(static_cast<T>(lhs) | static_cast<T>(rhs));
 }
 
 template <typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::value, Enum>::type operator&(
-    Enum lhs, Enum rhs)
+EnableIfBitmask<Enum> operator&(Enum lhs, Enum rhs)
 {
-    using T = typename std::underlying_type<Enum>::type;
+    using T = std::underlying_type_t<Enum>;
     return static_cast<Enum>(static_cast<T>(lhs) & static_cast<T>(rhs));
 }
 
 template <typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::value, Enum>::type operator~(
-    Enum rhs)
+EnableIfBitmask<Enum> operator^(Enum lhs, Enum rhs)
 {
-    using T = typename std::underlying_type<Enum>::type;
-    return static_cast<Enum>(~static_cast<T>(rhs));
+    using T = std::underlying_type_t<Enum>;
+    return static_cast<Enum>(static_cast<T>(lhs) ^ static_cast<T>(rhs));
 }
 
 template <typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::value, Enum &>::type operator|=(
-    Enum &lhs, Enum rhs)
+EnableIfBitmask<Enum> operator~(Enum value)
+{
+    using T = std::underlying_type_t<Enum>;
+    return static_cast<Enum>(~static_cast<T>(value));
+}
+
+template <typename Enum>
+EnableIfBitmaskRef<Enum> operator|=(Enum &lhs, Enum rhs)
 {
     lhs = lhs | rhs;
     return lhs;
 }
 
 template <typename Enum>
-typename std::enable_if<EnableBitMaskOperators<Enum>::value, Enum &>::type operator&=(
-    Enum &lhs, Enum rhs)
+EnableIfBitmaskRef<Enum> operator&=(Enum &lhs, Enum rhs)
 {
     lhs = lhs & rhs;
+    return lhs;
+}
+
+template <typename Enum>
+EnableIfBitmaskRef<Enum> operator^=(Enum &lhs, Enum rhs)
+{
+    lhs = lhs ^ rhs;
     return lhs;
 }
