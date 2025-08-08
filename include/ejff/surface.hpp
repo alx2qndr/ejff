@@ -39,11 +39,17 @@ public:
 
     void flip(SDL_FlipMode flipMode);
 
+    int width() const { return ptr_->w; }
+
+    int height() const { return ptr_->h; }
+
+    int pitch() const { return ptr_->pitch; }
+
     SDL_Surface *get() const noexcept { return ptr_.get(); }
 
 private:
     SDL_Surface *create(int width, int height, SDL_PixelFormat format);
-    SDL_Surface *loadSurfaceFromPath(const std::filesystem::path &path);
+    SDL_Surface *createFromImage(const std::filesystem::path &path);
 
     std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> ptr_{nullptr};
 };

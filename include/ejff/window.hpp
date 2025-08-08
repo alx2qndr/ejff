@@ -67,16 +67,20 @@ public:
 
     ~Window() = default;
 
-    void reset(SDL_Window *new_window = nullptr) noexcept
+    int width() const
     {
-        ptr_.reset(new_window);
+        int width;
+        SDL_GetWindowSize(ptr_.get(), &width, nullptr);
+        return width;
     }
 
-    SDL_Window *release() noexcept { return ptr_.release(); }
+    int height() const
+    {
+        int height;
+        SDL_GetWindowSize(ptr_.get(), nullptr, &height);
+        return height;
+    }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
-
-    SDL_Window *get() noexcept { return ptr_.get(); }
     SDL_Window *get() const noexcept { return ptr_.get(); }
 
 private:

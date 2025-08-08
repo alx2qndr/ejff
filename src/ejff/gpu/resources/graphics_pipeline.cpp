@@ -12,9 +12,9 @@ namespace ejff::gpu
 
 GraphicsPipeline::GraphicsPipeline(
     Device &device, Shader &vertexShader, Shader &fragmentShader,
-    Vertex::InputState vertexInputState, PrimitiveType primitiveType,
+    VertexInputState vertexInputState, PrimitiveType primitiveType,
     RasterizerState rasterizerState, MultisampleState multisampleState,
-    DepthStencilState depthStencilState, TargetInfo targetInfo)
+    DepthStencilState depthStencilState, GraphicsPipelineTargetInfo targetInfo)
     : ptr_(create(device, vertexShader, fragmentShader, vertexInputState,
                   primitiveType, rasterizerState, multisampleState,
                   depthStencilState, targetInfo),
@@ -34,15 +34,16 @@ void GraphicsPipeline::bind(RenderPass &renderPass)
 
 SDL_GPUGraphicsPipeline *GraphicsPipeline::create(
     Device &device, Shader &vertexShader, Shader &fragmentShader,
-    Vertex::InputState vertexInputState, PrimitiveType primitiveType,
+    VertexInputState vertexInputState, PrimitiveType primitiveType,
     RasterizerState rasterizerState, MultisampleState multisampleState,
-    DepthStencilState depthStencilState, TargetInfo targetInfo)
+    DepthStencilState depthStencilState, GraphicsPipelineTargetInfo targetInfo)
 {
     SDL_GPUGraphicsPipelineCreateInfo createInfo{};
     createInfo.vertex_shader = vertexShader.get();
     createInfo.fragment_shader = fragmentShader.get();
     createInfo.vertex_input_state = vertexInputState.get();
-    createInfo.primitive_type = static_cast<SDL_GPUPrimitiveType>(primitiveType);
+    createInfo.primitive_type =
+        static_cast<SDL_GPUPrimitiveType>(primitiveType);
     createInfo.rasterizer_state = rasterizerState.get();
     createInfo.multisample_state = multisampleState.get();
     createInfo.depth_stencil_state = depthStencilState.get();

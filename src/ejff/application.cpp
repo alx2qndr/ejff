@@ -10,6 +10,11 @@
 
 #include <vector>
 
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+
 #include <fmt/format.h>
 
 namespace ejff
@@ -17,25 +22,25 @@ namespace ejff
 
 static std::vector<gpu::Vertex> vertices = {
     {
-        {0.5f, -0.5f, 0.0f},
+        {1.0f, -1.0f, 0.0f},
         {1.0f, 0.0f, 0.0f, 1.0f},
         {1.0f, 0.0f},
         {0.0f, 0.0f, 1.0f},
     },
     {
-        {-0.5f, -0.5f, 0.0f},
+        {-1.0f, -1.0f, 0.0f},
         {0.0f, 1.0f, 0.0f, 1.0f},
         {0.0f, 0.0f},
         {0.0f, 0.0f, 1.0f},
     },
     {
-        {0.5f, 0.5f, 0.0f},
+        {1.0f, 1.0f, 0.0f},
         {0.0f, 0.0f, 1.0f, 1.0f},
         {1.0f, 1.0f},
         {0.0f, 0.0f, 1.0f},
     },
     {
-        {-0.5f, 0.5f, 0.0f},
+        {-1.0f, 1.0f, 0.0f},
         {1.0f, 1.0f, 0.0f, 1.0f},
         {0.0f, 1.0f},
         {0.0f, 0.0f, 1.0f},
@@ -43,6 +48,13 @@ static std::vector<gpu::Vertex> vertices = {
 };
 
 static std::vector<Uint32> indices = {0, 1, 2, 2, 1, 3};
+
+struct TransformUniformBuffer
+{
+    alignas(16) glm::mat4 projection{0.0f};
+    alignas(16) glm::mat4 view{0.0f};
+    alignas(16) glm::mat4 model{0.0f};
+};
 
 void Application::init(int argc, char **argv)
 {
@@ -64,61 +76,55 @@ void Application::init(int argc, char **argv)
     }
 
     auto vertexShader =
-        gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 0);
+        gpu::Shader(device_, "../shaders/src/triangle.vert", 0, 0, 0, 1);
     auto fragmentShader =
         gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
     auto vertexAttributes = gpu::Vertex::getAttributes();
     auto vertexBufferDescription = gpu::Vertex::getBufferDescriptions();
 
-    gpu::Vertex::InputState vertexInputState{};
+    gpu::VertexInputState vertexInputState{};
     vertexInputState.pBufferDescriptions = vertexBufferDescription.data();
     vertexInputState.bufferCount = vertexBufferDescription.size();
     vertexInputState.pAttributes = vertexAttributes.data();
     vertexInputState.attributesCount = vertexAttributes.size();
 
-    gpu::GraphicsPipeline::RasterizerState rasterizerState{};
-    rasterizerState.fillMode = gpu::GraphicsPipeline::FillMode::eFill;
-    rasterizerState.cullMode =
-        gpu::GraphicsPipeline::CullMode::SDL_GPU_CULLMODE_BACK;
-    rasterizerState.frontFace = gpu::GraphicsPipeline::FrontFace::eClockWise;
+    gpu::RasterizerState rasterizerState{};
+    rasterizerState.fillMode = gpu::FillMode::eFill;
+    rasterizerState.cullMode = gpu::CullMode::eBack;
+    rasterizerState.frontFace = gpu::FrontFace::eClockWise;
 
-    gpu::GraphicsPipeline::MultisampleState multisampleState{};
-    multisampleState.sampleCount = gpu::GraphicsPipeline::SampleCount::e1;
+    gpu::MultisampleState multisampleState{};
+    multisampleState.sampleCount = gpu::SampleCount::e1;
 
-    gpu::GraphicsPipeline::DepthStencilState depthStencilState{};
+    gpu::DepthStencilState depthStencilState{};
     depthStencilState.enableDepthTest = false;
 
-    gpu::GraphicsPipeline::ColorTargetBlendState blendState{};
-    blendState.srcColorBlendFactor =
-        gpu::GraphicsPipeline::BlendFactor::eSrcAlpha;
-    blendState.dstColorBlendFactor =
-        gpu::GraphicsPipeline::BlendFactor::eOneMinusSrcAlpha;
-    blendState.colorBlendOp = gpu::GraphicsPipeline::BlendOp::eAdd;
-    blendState.srcAlphaBlendFactor =
-        gpu::GraphicsPipeline::BlendFactor::eSrcAlpha;
-    blendState.dstAlphaBlendFactor =
-        gpu::GraphicsPipeline::BlendFactor::eOneMinusSrcAlpha;
-    blendState.alphaBlendOp = gpu::GraphicsPipeline::BlendOp::eAdd;
-    blendState.colorWriteMask = gpu::GraphicsPipeline::ColorComponentFlags::eR |
-                                gpu::GraphicsPipeline::ColorComponentFlags::eG |
-                                gpu::GraphicsPipeline::ColorComponentFlags::eB |
-                                gpu::GraphicsPipeline::ColorComponentFlags::eA;
+    gpu::ColorTargetBlendState blendState{};
+    blendState.srcColorBlendFactor = gpu::BlendFactor::eSrcAlpha;
+    blendState.dstColorBlendFactor = gpu::BlendFactor::eOneMinusSrcAlpha;
+    blendState.colorBlendOp = gpu::BlendOp::eAdd;
+    blendState.srcAlphaBlendFactor = gpu::BlendFactor::eSrcAlpha;
+    blendState.dstAlphaBlendFactor = gpu::BlendFactor::eOneMinusSrcAlpha;
+    blendState.alphaBlendOp = gpu::BlendOp::eAdd;
+    blendState.colorWriteMask =
+        gpu::ColorComponentFlags::eR | gpu::ColorComponentFlags::eG |
+        gpu::ColorComponentFlags::eB | gpu::ColorComponentFlags::eA;
     blendState.enableBlend = true;
 
-    gpu::GraphicsPipeline::ColorTargetDescription colorTargetDesc{};
-    colorTargetDesc.format = static_cast<gpu::Texture::Format>(
+    gpu::ColorTargetDescription colorTargetDesc{};
+    colorTargetDesc.format = static_cast<gpu::TextureFormat>(
         SDL_GetGPUSwapchainTextureFormat(device_.get(), window_.get()));
     colorTargetDesc.blendState = blendState;
 
-    gpu::GraphicsPipeline::TargetInfo targetInfo{};
-    targetInfo.pColorTargetDescriptions = &colorTargetDesc;
-    targetInfo.colorTargetCount = 1;
+    gpu::GraphicsPipelineTargetInfo graphicsPipelineTargetInfo{};
+    graphicsPipelineTargetInfo.pColorTargetDescriptions = &colorTargetDesc;
+    graphicsPipelineTargetInfo.colorTargetCount = 1;
 
     graphicsPipeline_ = gpu::GraphicsPipeline(
         device_, vertexShader, fragmentShader, vertexInputState,
-        gpu::GraphicsPipeline::PrimitiveType::eTriangleList, rasterizerState,
-        multisampleState, depthStencilState, targetInfo);
+        gpu::PrimitiveType::eTriangleList, rasterizerState, multisampleState,
+        depthStencilState, graphicsPipelineTargetInfo);
 
     vertexBuffer_ = gpu::Buffer(device_, gpu::Buffer::UsageFlags::eVertex,
                                 sizeof(gpu::Vertex) * vertices.size());
@@ -159,28 +165,28 @@ void Application::init(int argc, char **argv)
     imageSurface.flip(SDL_FLIP_VERTICAL);
 
     texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
-                            SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
-                            SDL_GPU_TEXTUREUSAGE_SAMPLER, imageSurface.get()->w,
-                            imageSurface.get()->h, 1, 1, SDL_GPU_SAMPLECOUNT_1);
+                            gpu::TextureFormat::eR8G8B8A8Unorm,
+                            SDL_GPU_TEXTUREUSAGE_SAMPLER, imageSurface.width(),
+                            imageSurface.height(), 1, 1, SDL_GPU_SAMPLECOUNT_1);
 
     gpu::TransferBuffer textureTransferBuffer(
         device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-        imageSurface.get()->h * imageSurface.get()->pitch);
+        imageSurface.height() * imageSurface.pitch());
 
     textureTransferBuffer.upload(device_, imageSurface.get()->pixels,
-                                 imageSurface.get()->h *
+                                 imageSurface.height() *
                                      imageSurface.get()->pitch);
 
-    copyPass.uploadToTexture(textureTransferBuffer, 0, imageSurface.get()->w,
-                             imageSurface.get()->h, texture_, 0, 0, 0, 0, 0,
-                             imageSurface.get()->w, imageSurface.get()->h, 1);
+    copyPass.uploadToTexture(textureTransferBuffer, 0, imageSurface.width(),
+                             imageSurface.height(), texture_, 0, 0, 0, 0, 0,
+                             imageSurface.width(), imageSurface.height(), 1);
 }
 
 Application::~Application()
 {
-    if (device_)
+    if (device_.get())
     {
-        if (window_)
+        if (window_.get())
         {
             SDL_ReleaseWindowFromGPUDevice(device_.get(), window_.get());
         }
@@ -213,6 +219,16 @@ void Application::iterate()
         gpu::RenderPass renderPass(commandBuffer, &colorTargetInfo, 1, nullptr);
 
         graphicsPipeline_.bind(renderPass);
+
+        float aspect = window_.width() / float(window_.height());
+
+        TransformUniformBuffer ubo{};
+        ubo.projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+        ubo.view = glm::mat4(1.0f);
+        ubo.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+
+        SDL_PushGPUComputeUniformData(commandBuffer.get(), 0, &ubo,
+                                      sizeof(ubo));
 
         SDL_GPUBufferBinding vertexBufferBinding{};
         vertexBufferBinding.buffer = vertexBuffer_.get();

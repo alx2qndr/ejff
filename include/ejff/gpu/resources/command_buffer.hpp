@@ -36,7 +36,10 @@ public:
 
     void submit();
 
-    SDL_GPUCommandBuffer *get() const noexcept { return ptr_.get(); }
+    SDL_GPUCommandBuffer *get() const noexcept
+    {
+        return ptr_.get();
+    }
 
 private:
     SDL_GPUCommandBuffer *acquire(Device &device);

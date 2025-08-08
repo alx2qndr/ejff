@@ -23,8 +23,6 @@ struct SDL_GPUDeviceDeleter
 class Device
 {
 public:
-    std::unique_ptr<SDL_GPUDevice, SDL_GPUDeviceDeleter> ptr_;
-
     Device() = default;
 
     explicit Device(Shader::Format formatFlags, bool debug, const char *driver);
@@ -37,15 +35,10 @@ public:
 
     ~Device() = default;
 
-    void reset(SDL_GPUDevice *new_device = nullptr) noexcept { ptr_.reset(new_device); }
-
-    SDL_GPUDevice *release() noexcept { return ptr_.release(); }
-
-    SDL_GPUDevice *get() noexcept { return ptr_.get(); }
-
     SDL_GPUDevice *get() const noexcept { return ptr_.get(); }
 
-    explicit operator bool() const noexcept { return ptr_ != nullptr; }
+private:
+    std::unique_ptr<SDL_GPUDevice, SDL_GPUDeviceDeleter> ptr_;
 };
 
 } // namespace ejff::gpu

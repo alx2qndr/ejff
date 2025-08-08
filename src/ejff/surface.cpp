@@ -15,7 +15,7 @@ Surface::Surface(int width, int height, SDL_PixelFormat format)
 }
 
 Surface::Surface(const std::filesystem::path &path)
-    : ptr_(loadSurfaceFromPath(path), SDL_SurfaceDeleter{})
+    : ptr_(createFromImage(path), SDL_SurfaceDeleter{})
 {
 }
 
@@ -51,11 +51,10 @@ SDL_Surface *Surface::create(int width, int height, SDL_PixelFormat format)
             "Couldn't create SDL_Surface. SDL_CreateSurface failed: {}",
             SDL_GetError()));
     }
-
     return surface;
 }
 
-SDL_Surface *Surface::loadSurfaceFromPath(const std::filesystem::path &path)
+SDL_Surface *Surface::createFromImage(const std::filesystem::path &path)
 {
     auto surface = IMG_Load(path.string().c_str());
     if (!surface)
@@ -64,7 +63,6 @@ SDL_Surface *Surface::loadSurfaceFromPath(const std::filesystem::path &path)
             "Couldn't create SDL_Surface. SDL_CreateSurface failed: {}",
             SDL_GetError()));
     }
-
     return surface;
 }
 
