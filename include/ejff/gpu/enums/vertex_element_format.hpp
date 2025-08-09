@@ -5,12 +5,6 @@
 namespace ejff::gpu
 {
 
-enum class VertexInputRate
-{
-    eVertex = SDL_GPU_VERTEXINPUTRATE_VERTEX,
-    eInstance = SDL_GPU_VERTEXINPUTRATE_INSTANCE
-};
-
 enum class VertexElementFormat
 {
     eInvalid = SDL_GPU_VERTEXELEMENTFORMAT_INVALID,
@@ -53,7 +47,7 @@ enum class VertexElementFormat
 
     eUShort2Norm = SDL_GPU_VERTEXELEMENTFORMAT_USHORT2_NORM,
     eUShort4Norm = SDL_GPU_VERTEXELEMENTFORMAT_USHORT4_NORM,
-    
+
     eHalf2 = SDL_GPU_VERTEXELEMENTFORMAT_HALF2,
     eHalf4 = SDL_GPU_VERTEXELEMENTFORMAT_HALF4
 };

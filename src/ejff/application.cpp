@@ -81,11 +81,11 @@ void Application::init(int argc, char **argv)
         gpu::Shader(device_, "../shaders/src/triangle.frag", 1, 0, 0, 0);
 
     auto vertexAttributes = gpu::Vertex::getAttributes();
-    auto vertexBufferDescription = gpu::Vertex::getBufferDescriptions();
+    auto vertexBufferDescriptions = gpu::Vertex::getBufferDescriptions();
 
     gpu::VertexInputState vertexInputState{};
-    vertexInputState.pBufferDescriptions = vertexBufferDescription.data();
-    vertexInputState.bufferCount = vertexBufferDescription.size();
+    vertexInputState.pBufferDescriptions = vertexBufferDescriptions.data();
+    vertexInputState.bufferCount = vertexBufferDescriptions.size();
     vertexInputState.pAttributes = vertexAttributes.data();
     vertexInputState.attributesCount = vertexAttributes.size();
 
@@ -126,10 +126,10 @@ void Application::init(int argc, char **argv)
         gpu::PrimitiveType::eTriangleList, rasterizerState, multisampleState,
         depthStencilState, graphicsPipelineTargetInfo);
 
-    vertexBuffer_ = gpu::Buffer(device_, gpu::Buffer::UsageFlags::eVertex,
+    vertexBuffer_ = gpu::Buffer(device_, gpu::BufferUsageFlags::eVertex,
                                 sizeof(gpu::Vertex) * vertices.size());
 
-    indexBuffer_ = gpu::Buffer(device_, gpu::Buffer::UsageFlags::eIndex,
+    indexBuffer_ = gpu::Buffer(device_, gpu::BufferUsageFlags::eIndex,
                                sizeof(Uint32) * indices.size());
 
     gpu::TransferBuffer transferBuffer(device_,

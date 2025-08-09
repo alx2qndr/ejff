@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ejff/gpu/enums/texture.hpp"
+#include "ejff/gpu/enums/texture_format.hpp"
 
 #include <memory>
 

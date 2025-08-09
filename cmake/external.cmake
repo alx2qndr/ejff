@@ -19,8 +19,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     find_package(Vulkan REQUIRED)
 endif()
 
-CPMAddPackage("gh:libsdl-org/SDL#release-3.2.16")
-CPMAddPackage("gh:libsdl-org/SDL_image#release-3.2.0")
+CPMAddPackage("gh:libsdl-org/SDL#release-3.2.20")
+CPMAddPackage("gh:libsdl-org/SDL_image#release-3.2.4")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 CPMAddPackage("gh:fmtlib/fmt#11.2.0")
 

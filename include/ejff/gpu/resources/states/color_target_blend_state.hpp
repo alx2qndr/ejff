@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ejff/gpu/enums/blend.hpp"
+#include "ejff/gpu/enums/blend_factor.hpp"
+#include "ejff/gpu/enums/blend_op.hpp"
+#include "ejff/gpu/enums/color_component_flags.hpp"
 
 #include <SDL3/SDL.h>
 

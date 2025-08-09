@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ejff/gpu/enums/vertex.hpp"
+#include "ejff/gpu/enums/vertex_element_format.hpp"
+#include "ejff/gpu/enums/vertex_input_rate.hpp"
 
 #include <array>
 #include <vector>

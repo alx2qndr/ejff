@@ -26,7 +26,7 @@ struct SDL_WindowDeleter
 class Window
 {
 public:
-    enum class Flags : uint64_t
+    enum class Flags : std::uint64_t
     {
         eFullscreen = SDL_WINDOW_FULLSCREEN,
         eOpengl = SDL_WINDOW_OPENGL,

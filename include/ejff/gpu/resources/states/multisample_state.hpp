@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ejff/gpu/enums/sample.hpp"
+#include "ejff/gpu/enums/sample_count.hpp"
 
 #include <SDL3/SDL.h>
 

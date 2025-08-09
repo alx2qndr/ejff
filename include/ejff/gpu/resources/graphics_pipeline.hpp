@@ -4,15 +4,14 @@
 
 #include "ejff/gpu/resources/texture.hpp"
 
-#include "ejff/gpu/resources/depth_stencil_state.hpp"
-#include "ejff/gpu/resources/multisample_state.hpp"
-#include "ejff/gpu/resources/rasterizer_state.hpp"
-#include "ejff/gpu/resources/vertex_input_state.hpp"
+#include "ejff/gpu/resources/states/depth_stencil_state.hpp"
+#include "ejff/gpu/resources/states/multisample_state.hpp"
+#include "ejff/gpu/resources/states/rasterizer_state.hpp"
+#include "ejff/gpu/resources/states/vertex_input_state.hpp"
 
-#include "ejff/gpu/enums/primitive.hpp"
+#include "ejff/gpu/enums/primitive_type.hpp"
 
 #include <memory>
-#include <vector>
 
 #include <SDL3/SDL.h>
 

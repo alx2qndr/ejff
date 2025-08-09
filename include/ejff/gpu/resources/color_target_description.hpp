@@ -1,8 +1,7 @@
 #pragma once
 
-#include "ejff/gpu/enums/texture.hpp"
-
-#include "ejff/gpu/resources/color_target_blend_state.hpp"
+#include "ejff/gpu/enums/texture_format.hpp"
+#include "ejff/gpu/resources/states/color_target_blend_state.hpp"
 
 #include <vector>
 
@@ -37,13 +36,16 @@ struct TargetInfo
         SDL_GPUGraphicsPipelineTargetInfo targetInfo{};
         if (pColorTargetDescriptions)
         {
-            static std::vector<SDL_GPUColorTargetDescription> colorDescs;
-            colorDescs.clear();
+            static std::vector<SDL_GPUColorTargetDescription>
+                colorTargetDescriptions;
+            colorTargetDescriptions.clear();
             for (uint32_t i = 0; i < colorTargetCount; ++i)
             {
-                colorDescs.push_back(pColorTargetDescriptions[i].get());
+                colorTargetDescriptions.push_back(
+                    pColorTargetDescriptions[i].get());
             }
-            targetInfo.color_target_descriptions = colorDescs.data();
+            targetInfo.color_target_descriptions =
+                colorTargetDescriptions.data();
         }
         targetInfo.num_color_targets = colorTargetCount;
         targetInfo.depth_stencil_format =

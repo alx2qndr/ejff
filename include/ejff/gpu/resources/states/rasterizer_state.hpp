@@ -1,6 +1,8 @@
 #pragma once
 
-#include "ejff/gpu/enums/rasterizer.hpp"
+#include "ejff/gpu/enums/cull_mode.hpp"
+#include "ejff/gpu/enums/fill_mode.hpp"
+#include "ejff/gpu/enums/front_face.hpp"
 
 #include <SDL3/SDL.h>
 

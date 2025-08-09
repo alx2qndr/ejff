@@ -5,7 +5,7 @@
 namespace ejff::gpu
 {
 
-enum class SampleCount : uint64_t
+enum class SampleCount 
 {
     e1 = SDL_GPU_SAMPLECOUNT_1,
     e2 = SDL_GPU_SAMPLECOUNT_2,

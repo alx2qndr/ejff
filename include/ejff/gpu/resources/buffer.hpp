@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ejff/gpu/enums/buffer_usage_flags.hpp"
+
 #include "ejff/utilities/enable_bit_mask_operators.hpp"
 
 #include <memory>
@@ -29,18 +31,8 @@ struct SDL_GPUBufferDeleter
 class Buffer
 {
 public:
-    enum class UsageFlags : uint64_t
-    {
-        eVertex = SDL_GPU_BUFFERUSAGE_VERTEX,
-        eIndex = SDL_GPU_BUFFERUSAGE_INDEX,
-        eIndirect = SDL_GPU_BUFFERUSAGE_INDIRECT,
-        eGraphicsStorageRead = SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ,
-        eComputeStorageRead = SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_READ,
-        eComputeStorageWrite = SDL_GPU_BUFFERUSAGE_COMPUTE_STORAGE_WRITE
-    };
-
     Buffer() = default;
-    explicit Buffer(Device &device, UsageFlags usage, uint32_t size);
+    explicit Buffer(Device &device, BufferUsageFlags usage, uint32_t size);
 
     Buffer(const Buffer &) = delete;
     Buffer &operator=(const Buffer &) = delete;
@@ -53,11 +45,11 @@ public:
     SDL_GPUBuffer *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUBuffer *create(Device &device, UsageFlags usage, uint32_t size);
+    SDL_GPUBuffer *create(Device &device, BufferUsageFlags usage, uint32_t size);
 
     std::unique_ptr<SDL_GPUBuffer, SDL_GPUBufferDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu
 
-ENABLE_BITMASK_OPERATORS(ejff::gpu::Buffer::UsageFlags);
+ENABLE_BITMASK_OPERATORS(ejff::gpu::BufferUsageFlags);

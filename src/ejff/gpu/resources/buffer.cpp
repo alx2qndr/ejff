@@ -8,12 +8,13 @@
 namespace ejff::gpu
 {
 
-Buffer::Buffer(Device &device, UsageFlags usage, uint32_t size)
+Buffer::Buffer(Device &device, BufferUsageFlags usage, uint32_t size)
     : ptr_(create(device, usage, size), SDL_GPUBufferDeleter{device.get()})
 {
 }
 
-SDL_GPUBuffer *Buffer::create(Device &device, UsageFlags usage, uint32_t size)
+SDL_GPUBuffer *Buffer::create(Device &device, BufferUsageFlags usage,
+                              uint32_t size)
 {
     SDL_GPUBufferCreateInfo createinfo{};
     createinfo.usage = static_cast<SDL_GPUBufferUsageFlags>(usage);

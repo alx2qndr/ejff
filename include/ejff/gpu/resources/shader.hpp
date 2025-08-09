@@ -30,7 +30,7 @@ struct SDL_GPUShaderDeleter
 class Shader
 {
 public:
-    enum class Format : uint64_t
+    enum class Format 
     {
         eInvalid = SDL_GPU_SHADERFORMAT_INVALID,
         ePrivate = SDL_GPU_SHADERFORMAT_PRIVATE,

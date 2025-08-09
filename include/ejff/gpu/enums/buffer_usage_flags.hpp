@@ -5,7 +5,7 @@
 namespace ejff::gpu
 {
 
-enum class BufferUsageFlags
+enum class BufferUsageFlags : uint32_t
 {
     eVertex = SDL_GPU_BUFFERUSAGE_VERTEX,
     eIndex = SDL_GPU_BUFFERUSAGE_INDEX,
