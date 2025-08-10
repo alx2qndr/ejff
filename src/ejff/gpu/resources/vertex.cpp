@@ -1,54 +1,25 @@
 #include "ejff/gpu/resources/vertex.hpp"
-
-#include <cstddef> // offsetof
+#include <cstddef>
 
 namespace ejff::gpu
 {
 
 const std::array<VertexAttribute, 4> Vertex::getAttributes()
 {
-    static const std::array<VertexAttribute, 4> attributes = [] {
-        std::array<VertexAttribute, 4> attr{};
-
-        attr[0].location = 0;
-        attr[0].buffer_slot = 0;
-        attr[0].format = VertexElementFormat::eFloat3;
-        attr[0].offset = offsetof(Vertex, position);
-
-        attr[1].location = 1;
-        attr[1].buffer_slot = 0;
-        attr[1].format = VertexElementFormat::eFloat4;
-        attr[1].offset = offsetof(Vertex, color);
-
-        attr[2].location = 2;
-        attr[2].buffer_slot = 0;
-        attr[2].format = VertexElementFormat::eFloat2;
-        attr[2].offset = offsetof(Vertex, uv);
-
-        attr[3].location = 3;
-        attr[3].buffer_slot = 0;
-        attr[3].format = VertexElementFormat::eFloat3;
-        attr[3].offset = offsetof(Vertex, normal);
-
-        return attr;
-    }();
+    static const std::array<VertexAttribute, 4> attributes = {{
+        {0, 0, VertexElementFormat::eFloat3, offsetof(Vertex, position)},
+        {1, 0, VertexElementFormat::eFloat4, offsetof(Vertex, color)},
+        {2, 0, VertexElementFormat::eFloat2, offsetof(Vertex, uv)},
+        {3, 0, VertexElementFormat::eFloat3, offsetof(Vertex, normal)},
+    }};
 
     return attributes;
 }
 
 const std::array<VertexBufferDescription, 1> Vertex::getBufferDescriptions()
 {
-    static const std::array<VertexBufferDescription, 1> bufferDescriptions =
-        [] {
-            std::array<VertexBufferDescription, 1> bufDesc{};
-
-            bufDesc[0].slot = 0;
-            bufDesc[0].pitch = sizeof(Vertex);
-            bufDesc[0].input_rate = VertexInputRate::eVertex;
-            bufDesc[0].instance_step_rate = 0;
-
-            return bufDesc;
-        }();
+    static const std::array<VertexBufferDescription, 1> bufferDescriptions = {
+        {{0, sizeof(Vertex), VertexInputRate::eVertex, 0}}};
 
     return bufferDescriptions;
 }

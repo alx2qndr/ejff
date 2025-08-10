@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ejff/utilities/enable_bit_mask_operators.hpp"
+
 #include <SDL3/SDL.h>
 
 namespace ejff::gpu
@@ -16,3 +18,5 @@ enum class BufferUsageFlags : uint32_t
 };
 
 } // namespace ejff::gpu
+
+ENABLE_BITMASK_OPERATORS(ejff::gpu::BufferUsageFlags);

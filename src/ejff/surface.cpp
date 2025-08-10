@@ -9,7 +9,7 @@
 namespace ejff
 {
 
-Surface::Surface(int width, int height, SDL_PixelFormat format)
+Surface::Surface(int width, int height, PixelFormat format)
     : ptr_(create(width, height, format), SDL_SurfaceDeleter{})
 {
 }
@@ -19,9 +19,9 @@ Surface::Surface(const std::filesystem::path &path)
 {
 }
 
-void Surface::flip(SDL_FlipMode flipMode)
+void Surface::flip(FlipMode flipMode)
 {
-    if (!SDL_FlipSurface(ptr_.get(), flipMode))
+    if (!SDL_FlipSurface(ptr_.get(), static_cast<SDL_FlipMode>(flipMode)))
     {
         throw std::runtime_error(
             fmt::format("Couldn't flip SDL_Surface. SDL_FlipSurface failed: {}",
@@ -29,9 +29,10 @@ void Surface::flip(SDL_FlipMode flipMode)
     }
 }
 
-void Surface::convert(SDL_PixelFormat format)
+void Surface::convert(PixelFormat format)
 {
-    auto surface = SDL_ConvertSurface(ptr_.get(), format);
+    auto surface =
+        SDL_ConvertSurface(ptr_.get(), static_cast<SDL_PixelFormat>(format));
     if (!surface)
     {
         throw std::runtime_error(fmt::format(
@@ -42,9 +43,10 @@ void Surface::convert(SDL_PixelFormat format)
     ptr_.reset(surface);
 }
 
-SDL_Surface *Surface::create(int width, int height, SDL_PixelFormat format)
+SDL_Surface *Surface::create(int width, int height, PixelFormat format)
 {
-    auto surface = SDL_CreateSurface(width, height, format);
+    auto surface =
+        SDL_CreateSurface(width, height, static_cast<SDL_PixelFormat>(format));
     if (!surface)
     {
         throw std::runtime_error(fmt::format(

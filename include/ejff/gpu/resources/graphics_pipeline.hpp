@@ -1,15 +1,11 @@
 #pragma once
 
+#include "ejff/gpu/enums/primitive_type.hpp"
 #include "ejff/gpu/resources/graphics_pipeline_target_info.hpp"
-
-#include "ejff/gpu/resources/texture.hpp"
-
 #include "ejff/gpu/resources/states/depth_stencil_state.hpp"
 #include "ejff/gpu/resources/states/multisample_state.hpp"
 #include "ejff/gpu/resources/states/rasterizer_state.hpp"
 #include "ejff/gpu/resources/states/vertex_input_state.hpp"
-
-#include "ejff/gpu/enums/primitive_type.hpp"
 
 #include <memory>
 
@@ -45,11 +41,14 @@ class GraphicsPipeline
 public:
     GraphicsPipeline() = default;
 
-    explicit GraphicsPipeline(
-        Device &device, Shader &vertexShader, Shader &fragmentShader,
-        VertexInputState vertexInputState, PrimitiveType primitiveType,
-        RasterizerState rasterizerState, MultisampleState multisampleState,
-        DepthStencilState depthStencilState, GraphicsPipelineTargetInfo targetInfo);
+    explicit GraphicsPipeline(Device &device, Shader &vertexShader,
+                              Shader &fragmentShader,
+                              VertexInputState vertexInputState,
+                              PrimitiveType primitiveType,
+                              RasterizerState rasterizerState,
+                              MultisampleState multisampleState,
+                              DepthStencilState depthStencilState,
+                              GraphicsPipelineTargetInfo targetInfo);
 
     GraphicsPipeline(const GraphicsPipeline &) = delete;
     GraphicsPipeline &operator=(const GraphicsPipeline &) = delete;
@@ -64,11 +63,14 @@ public:
     SDL_GPUGraphicsPipeline *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUGraphicsPipeline *create(
-        Device &device, Shader &vertexShader, Shader &fragmentShader,
-        VertexInputState vertexInputState, PrimitiveType primitiveType,
-        RasterizerState rasterizerState, MultisampleState multisampleState,
-        DepthStencilState depthStencilState, GraphicsPipelineTargetInfo targetInfo);
+    SDL_GPUGraphicsPipeline *create(Device &device, Shader &vertexShader,
+                                    Shader &fragmentShader,
+                                    VertexInputState vertexInputState,
+                                    PrimitiveType primitiveType,
+                                    RasterizerState rasterizerState,
+                                    MultisampleState multisampleState,
+                                    DepthStencilState depthStencilState,
+                                    GraphicsPipelineTargetInfo targetInfo);
 
     std::unique_ptr<SDL_GPUGraphicsPipeline, SDL_GPUGraphicsPipelineDeleter>
         ptr_{nullptr};

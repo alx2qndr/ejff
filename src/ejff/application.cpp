@@ -1,5 +1,4 @@
 #include "ejff/application.hpp"
-
 #include "ejff/gpu/resources/command_buffer.hpp"
 #include "ejff/gpu/resources/copy_pass.hpp"
 #include "ejff/gpu/resources/render_pass.hpp"
@@ -112,13 +111,14 @@ void Application::init(int argc, char **argv)
         gpu::ColorComponentFlags::eB | gpu::ColorComponentFlags::eA;
     blendState.enableBlend = true;
 
-    gpu::ColorTargetDescription colorTargetDesc{};
-    colorTargetDesc.format = static_cast<gpu::TextureFormat>(
+    gpu::ColorTargetDescription сolorTargetDescription{};
+    сolorTargetDescription.format = static_cast<gpu::TextureFormat>(
         SDL_GetGPUSwapchainTextureFormat(device_.get(), window_.get()));
-    colorTargetDesc.blendState = blendState;
+    сolorTargetDescription.blendState = blendState;
 
     gpu::GraphicsPipelineTargetInfo graphicsPipelineTargetInfo{};
-    graphicsPipelineTargetInfo.pColorTargetDescriptions = &colorTargetDesc;
+    graphicsPipelineTargetInfo.pColorTargetDescriptions =
+        &сolorTargetDescription;
     graphicsPipelineTargetInfo.colorTargetCount = 1;
 
     graphicsPipeline_ = gpu::GraphicsPipeline(
@@ -133,7 +133,7 @@ void Application::init(int argc, char **argv)
                                sizeof(Uint32) * indices.size());
 
     gpu::TransferBuffer transferBuffer(device_,
-                                       SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+                                       gpu::TransferBufferUsage::eUpload,
                                        sizeof(gpu::Vertex) * vertices.size() +
                                            sizeof(Uint32) * indices.size());
 
@@ -152,34 +152,32 @@ void Application::init(int argc, char **argv)
                             sizeof(gpu::Vertex) * vertices.size(), indexBuffer_,
                             0, sizeof(Uint32) * indices.size());
 
-    sampler_ =
-        gpu::Sampler(device_, SDL_GPU_FILTER_LINEAR, SDL_GPU_FILTER_LINEAR,
-                     SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
-                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-                     SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, 0.0f, 0.0f,
-                     SDL_GPU_COMPAREOP_ALWAYS, 0.0f, 0.0f, false, false);
+    sampler_ = gpu::Sampler(device_, gpu::Filter::eLinear, gpu::Filter::eLinear,
+                            gpu::SamplerMipmapMode::eLinear,
+                            gpu::SamplerAddressMode::eClampToEdge,
+                            gpu::SamplerAddressMode::eClampToEdge,
+                            gpu::SamplerAddressMode::eClampToEdge, 0.0f, 0.0f,
+                            gpu::CompareOp::eAlways, 0.0f, 0.0f, false, false);
 
-    auto imageSurface = Surface("../assets/textures/003_basecolor_0.png");
-    imageSurface.convert(SDL_PIXELFORMAT_ABGR8888);
-    imageSurface.flip(SDL_FLIP_VERTICAL);
+    auto surface = Surface("../assets/textures/003_basecolor_0.png");
+    surface.convert(PixelFormat::eABGR8888);
+    surface.flip(FlipMode::eVertical);
 
-    texture_ = gpu::Texture(device_, SDL_GPU_TEXTURETYPE_2D,
+    texture_ = gpu::Texture(device_, gpu::TextureType::e2D,
                             gpu::TextureFormat::eR8G8B8A8Unorm,
-                            SDL_GPU_TEXTUREUSAGE_SAMPLER, imageSurface.width(),
-                            imageSurface.height(), 1, 1, SDL_GPU_SAMPLECOUNT_1);
+                            gpu::TextureUsageFlags::eSampler, surface.width(),
+                            surface.height(), 1, 1, gpu::SampleCount::e1);
 
     gpu::TransferBuffer textureTransferBuffer(
-        device_, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-        imageSurface.height() * imageSurface.pitch());
+        device_, gpu::TransferBufferUsage::eUpload,
+        surface.height() * surface.pitch());
 
-    textureTransferBuffer.upload(device_, imageSurface.get()->pixels,
-                                 imageSurface.height() *
-                                     imageSurface.get()->pitch);
+    textureTransferBuffer.upload(device_, surface.get()->pixels,
+                                 surface.height() * surface.get()->pitch);
 
-    copyPass.uploadToTexture(textureTransferBuffer, 0, imageSurface.width(),
-                             imageSurface.height(), texture_, 0, 0, 0, 0, 0,
-                             imageSurface.width(), imageSurface.height(), 1);
+    copyPass.uploadToTexture(textureTransferBuffer, 0, surface.width(),
+                             surface.height(), texture_, 0, 0, 0, 0, 0,
+                             surface.width(), surface.height(), 1);
 }
 
 Application::~Application()

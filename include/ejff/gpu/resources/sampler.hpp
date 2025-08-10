@@ -1,5 +1,10 @@
 #pragma once
 
+#include "ejff/gpu/enums/compare_op.hpp"
+#include "ejff/gpu/enums/filter.hpp"
+#include "ejff/gpu/enums/sampler_address_mode.hpp"
+#include "ejff/gpu/enums/sampler_mipmap_mode.hpp"
+
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -29,15 +34,13 @@ class Sampler
 public:
     Sampler() = default;
 
-    explicit Sampler(Device &device, SDL_GPUFilter minFilter,
-                     SDL_GPUFilter magFilter,
-                     SDL_GPUSamplerMipmapMode mipmapMode,
-                     SDL_GPUSamplerAddressMode addressModeU,
-                     SDL_GPUSamplerAddressMode addressModeV,
-                     SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
-                     float maxAnisotropy, SDL_GPUCompareOp compareOp,
-                     float minLod, float maxLod, bool enableAnisotropy,
-                     bool enableCompare);
+    explicit Sampler(Device &device, Filter minFilter, Filter magFilter,
+                     SamplerMipmapMode mipmapMode,
+                     SamplerAddressMode addressModeU,
+                     SamplerAddressMode addressModeV,
+                     SamplerAddressMode addressModeW, float mipLodBias,
+                     float maxAnisotropy, CompareOp compareOp, float minLod,
+                     float maxLod, bool enableAnisotropy, bool enableCompare);
 
     Sampler(const Sampler &) = delete;
     Sampler &operator=(const Sampler &) = delete;
@@ -50,15 +53,13 @@ public:
     SDL_GPUSampler *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUSampler *create(Device &device, SDL_GPUFilter minFilter,
-                           SDL_GPUFilter magFilter,
-                           SDL_GPUSamplerMipmapMode mipmapMode,
-                           SDL_GPUSamplerAddressMode addressModeU,
-                           SDL_GPUSamplerAddressMode addressModeV,
-                           SDL_GPUSamplerAddressMode addressModeW,
-                           float mipLodBias, float maxAnisotropy,
-                           SDL_GPUCompareOp compareOp, float minLod,
-                           float maxLod, bool enableAnisotropy,
+    SDL_GPUSampler *create(Device &device, Filter minFilter, Filter magFilter,
+                           SamplerMipmapMode mipmapMode,
+                           SamplerAddressMode addressModeU,
+                           SamplerAddressMode addressModeV,
+                           SamplerAddressMode addressModeW, float mipLodBias,
+                           float maxAnisotropy, CompareOp compareOp,
+                           float minLod, float maxLod, bool enableAnisotropy,
                            bool enableCompare);
 
     std::unique_ptr<SDL_GPUSampler, SDL_GPUSamplerDeleter> ptr_{nullptr};

@@ -2,6 +2,8 @@
 
 #include "ejff/gpu/resources/color_target_description.hpp"
 
+#include <vector>
+
 namespace ejff::gpu
 {
 

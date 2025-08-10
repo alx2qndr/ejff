@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ejff/enums/flip.hpp"
+#include "ejff/enums/pixel_format.hpp"
+
 #include <filesystem>
 #include <memory>
 
@@ -24,7 +27,7 @@ class Surface
 public:
     Surface() = default;
 
-    explicit Surface(int width, int height, SDL_PixelFormat format);
+    explicit Surface(int width, int height, PixelFormat format);
     explicit Surface(const std::filesystem::path &path);
 
     Surface(const Surface &) = delete;
@@ -35,9 +38,9 @@ public:
 
     ~Surface() = default;
 
-    void convert(SDL_PixelFormat format);
+    void convert(PixelFormat format);
 
-    void flip(SDL_FlipMode flipMode);
+    void flip(FlipMode flipMode);
 
     int width() const { return ptr_->w; }
 
@@ -48,7 +51,7 @@ public:
     SDL_Surface *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_Surface *create(int width, int height, SDL_PixelFormat format);
+    SDL_Surface *create(int width, int height, PixelFormat format);
     SDL_Surface *createFromImage(const std::filesystem::path &path);
 
     std::unique_ptr<SDL_Surface, SDL_SurfaceDeleter> ptr_{nullptr};

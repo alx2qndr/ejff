@@ -8,12 +8,11 @@
 namespace ejff::gpu
 {
 
-Sampler::Sampler(Device &device, SDL_GPUFilter minFilter,
-                 SDL_GPUFilter magFilter, SDL_GPUSamplerMipmapMode mipmapMode,
-                 SDL_GPUSamplerAddressMode addressModeU,
-                 SDL_GPUSamplerAddressMode addressModeV,
-                 SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
-                 float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod,
+Sampler::Sampler(Device &device, Filter minFilter, Filter magFilter,
+                 SamplerMipmapMode mipmapMode, SamplerAddressMode addressModeU,
+                 SamplerAddressMode addressModeV,
+                 SamplerAddressMode addressModeW, float mipLodBias,
+                 float maxAnisotropy, CompareOp compareOp, float minLod,
                  float maxLod, bool enableAnisotropy, bool enableCompare)
     : ptr_(create(device, minFilter, magFilter, mipmapMode, addressModeU,
                   addressModeV, addressModeW, mipLodBias, maxAnisotropy,
@@ -22,24 +21,28 @@ Sampler::Sampler(Device &device, SDL_GPUFilter minFilter,
 {
 }
 
-SDL_GPUSampler *Sampler::create(
-    Device &device, SDL_GPUFilter minFilter, SDL_GPUFilter magFilter,
-    SDL_GPUSamplerMipmapMode mipmapMode, SDL_GPUSamplerAddressMode addressModeU,
-    SDL_GPUSamplerAddressMode addressModeV,
-    SDL_GPUSamplerAddressMode addressModeW, float mipLodBias,
-    float maxAnisotropy, SDL_GPUCompareOp compareOp, float minLod, float maxLod,
-    bool enableAnisotropy, bool enableCompare)
+SDL_GPUSampler *Sampler::create(Device &device, Filter minFilter,
+                                Filter magFilter, SamplerMipmapMode mipmapMode,
+                                SamplerAddressMode addressModeU,
+                                SamplerAddressMode addressModeV,
+                                SamplerAddressMode addressModeW,
+                                float mipLodBias, float maxAnisotropy,
+                                CompareOp compareOp, float minLod, float maxLod,
+                                bool enableAnisotropy, bool enableCompare)
 {
     SDL_GPUSamplerCreateInfo createInfo{};
-    createInfo.min_filter = minFilter;
-    createInfo.mag_filter = magFilter;
-    createInfo.mipmap_mode = mipmapMode;
-    createInfo.address_mode_u = addressModeU;
-    createInfo.address_mode_v = addressModeV;
-    createInfo.address_mode_w = addressModeW;
+    createInfo.min_filter = static_cast<SDL_GPUFilter>(minFilter);
+    createInfo.mag_filter = static_cast<SDL_GPUFilter>(magFilter);
+    createInfo.mipmap_mode = static_cast<SDL_GPUSamplerMipmapMode>(mipmapMode);
+    createInfo.address_mode_u =
+        static_cast<SDL_GPUSamplerAddressMode>(addressModeU);
+    createInfo.address_mode_v =
+        static_cast<SDL_GPUSamplerAddressMode>(addressModeV);
+    createInfo.address_mode_w =
+        static_cast<SDL_GPUSamplerAddressMode>(addressModeW);
     createInfo.mip_lod_bias = mipLodBias;
     createInfo.max_anisotropy = maxAnisotropy;
-    createInfo.compare_op = compareOp;
+    createInfo.compare_op = static_cast<SDL_GPUCompareOp>(compareOp);
     createInfo.min_lod = minLod;
     createInfo.max_lod = maxLod;
     createInfo.enable_anisotropy = enableAnisotropy;

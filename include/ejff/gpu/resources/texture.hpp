@@ -1,6 +1,9 @@
 #pragma once
 
+#include "ejff/gpu/enums/sample_count.hpp"
 #include "ejff/gpu/enums/texture_format.hpp"
+#include "ejff/gpu/enums/texture_type.hpp"
+#include "ejff/gpu/enums/texture_usage_flags.hpp"
 
 #include <memory>
 
@@ -31,11 +34,10 @@ class Texture
 public:
     Texture() = default;
 
-    explicit Texture(Device &device, SDL_GPUTextureType type,
-                     gpu::TextureFormat format,
-                     SDL_GPUTextureUsageFlags usage, uint32_t width,
-                     uint32_t height, uint32_t layerCountOrDepth,
-                     uint32_t numLevels, SDL_GPUSampleCount sampleCount);
+    explicit Texture(Device &device, TextureType type, TextureFormat format,
+                     TextureUsageFlags usage, uint32_t width, uint32_t height,
+                     uint32_t layerCountOrDepth, uint32_t numLevels,
+                     SampleCount sampleCount);
 
     Texture(const Texture &) = delete;
     Texture &operator=(const Texture &) = delete;
@@ -48,11 +50,11 @@ public:
     SDL_GPUTexture *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUTexture *create(Device &device, SDL_GPUTextureType type,
-                           gpu::TextureFormat format,
-                           SDL_GPUTextureUsageFlags usage, uint32_t width,
-                           uint32_t height, uint32_t layerCountOrDepth,
-                           uint32_t numLevels, SDL_GPUSampleCount sampleCount);
+    SDL_GPUTexture *create(Device &device, TextureType type,
+                           TextureFormat format, TextureUsageFlags usage,
+                           uint32_t width, uint32_t height,
+                           uint32_t layerCountOrDepth, uint32_t numLevels,
+                           SampleCount sampleCount);
 
     std::unique_ptr<SDL_GPUTexture, SDL_GPUTextureDeleter> ptr_{nullptr};
 };

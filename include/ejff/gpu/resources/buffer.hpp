@@ -2,8 +2,6 @@
 
 #include "ejff/gpu/enums/buffer_usage_flags.hpp"
 
-#include "ejff/utilities/enable_bit_mask_operators.hpp"
-
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -45,11 +43,10 @@ public:
     SDL_GPUBuffer *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUBuffer *create(Device &device, BufferUsageFlags usage, uint32_t size);
+    SDL_GPUBuffer *create(Device &device, BufferUsageFlags usage,
+                          uint32_t size);
 
     std::unique_ptr<SDL_GPUBuffer, SDL_GPUBufferDeleter> ptr_{nullptr};
 };
 
 } // namespace ejff::gpu
-
-ENABLE_BITMASK_OPERATORS(ejff::gpu::BufferUsageFlags);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ejff/gpu/enums/transfer_buffer_usage.hpp"
+
 #include <memory>
 
 #include <SDL3/SDL.h>
@@ -32,7 +34,7 @@ class TransferBuffer
 public:
     TransferBuffer() = default;
 
-    explicit TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage,
+    explicit TransferBuffer(Device &device, TransferBufferUsage usage,
                             uint32_t size);
 
     TransferBuffer(const TransferBuffer &) = delete;
@@ -49,8 +51,7 @@ public:
     SDL_GPUTransferBuffer *get() const noexcept { return ptr_.get(); }
 
 private:
-    SDL_GPUTransferBuffer *create(Device &device,
-                                  SDL_GPUTransferBufferUsage usage,
+    SDL_GPUTransferBuffer *create(Device &device, TransferBufferUsage usage,
                                   uint32_t size);
 
     std::unique_ptr<SDL_GPUTransferBuffer, SDL_GPUTransferBufferDeleter> ptr_{

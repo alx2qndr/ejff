@@ -8,7 +8,7 @@
 namespace ejff::gpu
 {
 
-TransferBuffer::TransferBuffer(Device &device, SDL_GPUTransferBufferUsage usage,
+TransferBuffer::TransferBuffer(Device &device, TransferBufferUsage usage,
                                Uint32 size)
     : ptr_(create(device, usage, size),
            SDL_GPUTransferBufferDeleter{device.get()})
@@ -33,11 +33,11 @@ void TransferBuffer::upload(Device &device, const void *data, std::size_t size,
 }
 
 SDL_GPUTransferBuffer *TransferBuffer::create(Device &device,
-                                              SDL_GPUTransferBufferUsage usage,
+                                              TransferBufferUsage usage,
                                               uint32_t size)
 {
     SDL_GPUTransferBufferCreateInfo createInfo{};
-    createInfo.usage = usage;
+    createInfo.usage = static_cast<SDL_GPUTransferBufferUsage>(usage);
     createInfo.size = static_cast<Uint32>(size);
 
     auto transferBuffer =
